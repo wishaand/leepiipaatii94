@@ -1,8 +1,31 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>{% block title %}De Opdracht{% endblock %}</h1>
+<h1>{% block title %}{% endblock %}</h1>
 {% endblock %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EuroVault Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>EuroVault</h1>
+            <p>Log in om verder te gaan</p>
+            <form>
+                <input type="email" placeholder="E-mailadres" required>
+                <input type="password" placeholder="Wachtwoord" required>
+                <button type="submit">Log in</button>
+            </form>
+            <p class="small-text"><a href="#">Wachtwoord vergeten?</a></p>
+        </div>
+    </div>
+</body>
+</html>
 
 {% block content %}
   <p>Creating Tomorrow</p>
