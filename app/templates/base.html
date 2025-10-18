@@ -1,25 +1,189 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>{% block title %}De opdracht{% endblock %}</title>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{url_for('static', filename='css/style.css')}}"
-    />
-  </head>
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ title or "EuroVault" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-dot" aria-hidden="true"></div>
+        <span class="brand-name">EuroVault</span>
+        <div class="brand-actions">
+          <span class="notif-dot" title="Meldingen"></span>
+          <div class="avatar" title="Profiel"></div>
+        </div>
+      </div>
 
-  <body>
-    <nav>
-      <ul>
-        <li><a href="{{ url_for('main.index') }}">Home</a></li>
-        <li><a href="{{ url_for('events.index') }}">Events</a></li>
-      </ul>
-    </nav>
-    <div class="main">
-      <header>{% block header %}{% endblock %}</header>
-      <div>{% block content %}{% endblock %}</div>
-    </div>
-    <footer>Developed with ♥️ in Python and Flask</footer>
-  </body>
+      <nav class="nav" aria-label="Primair">
+        <a class="nav-item active" href="#" aria-current="page">
+          <span class="nav-ico">🏠</span><span>Home</span><span class="badge">New</span>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-ico">🎬</span><span>Videos</span>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-ico">🖼️</span><span>Photo Gallery</span>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-ico">📄</span><span>Documents</span><span class="badge">New</span>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-ico">📊</span><span>Analytics</span>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-ico">❤️</span><span>Favorites</span>
+        </a>
+      </nav>
+
+      <div class="promo" role="region" aria-label="Upgrade">
+        <div class="promo-art" aria-hidden="true"></div>
+        <div class="promo-body">
+          <h4>EuroVault Pro</h4>
+          <p>Meer opslag, delen en beveiliging.</p>
+          <a class="btn" href="#" role="button">See Plans</a>
+        </div>
+      </div>
+
+      <div class="meta-actions" aria-label="Systeem acties">
+        <a href="#" class="meta-item">🗂️ Archive</a>
+        <a href="#" class="meta-item">🗑️ Recycle</a>
+        <a href="#" class="meta-item">⚙️ Settings</a>
+        <a href="#" class="meta-item">👤 Profile</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="content">
+      <header class="content-head">
+        <h2>Folders</h2>
+      </header>
+
+      <section class="folders" aria-label="Map-overzicht">
+        <!-- Elke kaart is een link (hele card klikbaar) -->
+        <a class="folder-card card-link" href="#" aria-label="Open Images map">
+          <div class="folder-card__head">
+            <div class="folder-card__title">
+              <span class="dot"></span><strong>Images</strong>
+            </div>
+            <span class="muted">1,734,430 Files</span>
+          </div>
+          <div class="folder-card__hero"></div>
+          <div class="folder-card__share">
+            <div class="chips" aria-hidden="true">
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+              <span class="chip more">+9</span>
+            </div>
+            <span class="link">Open</span>
+          </div>
+          <div class="folder-card__foot muted">Last Edit: May 3rd 2021</div>
+        </a>
+
+        <a class="folder-card card-link" href="#" aria-label="Open Videos map">
+          <div class="folder-card__head">
+            <div class="folder-card__title">
+              <span class="dot"></span><strong>Videos</strong>
+            </div>
+            <span class="muted">34,430 Files</span>
+          </div>
+          <div class="folder-card__hero"></div>
+          <div class="folder-card__share">
+            <div class="chips" aria-hidden="true">
+              <span class="chip"></span><span class="chip"></span><span class="chip">+1</span>
+            </div>
+            <span class="link">Open</span>
+          </div>
+          <div class="folder-card__foot muted">Last Edit: May 25th 2023</div>
+        </a>
+
+        <a class="folder-card card-link" href="#" aria-label="Open Audio map">
+          <div class="folder-card__head">
+            <div class="folder-card__title">
+              <span class="dot"></span><strong>Audio</strong>
+            </div>
+            <span class="muted">34,430 Files</span>
+          </div>
+          <div class="folder-card__hero"></div>
+          <div class="folder-card__share">
+            <div class="chips" aria-hidden="true">
+              <span class="chip"></span>
+            </div>
+            <span class="link">Open</span>
+          </div>
+          <div class="folder-card__foot muted">Last Edit: Jun 30th 2020</div>
+        </a>
+      </section>
+
+      <section class="latest" aria-label="Recent">
+        <h3>Latest</h3>
+
+        <div class="latest-grid">
+          <a class="tile audio card-link" href="#" aria-label="Open Aya_Alkursi.mp3">
+            <div class="tile__icon">🎙️</div>
+            <div class="tile__title">Aya_Alkursi.mp3</div>
+            <div class="tile__controls">
+              <button class="icon-btn" type="button" aria-label="Play">▶</button>
+              <div class="progress" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+                <span></span>
+              </div>
+              <button class="icon-btn" type="button" aria-label="Meer opties">⏱</button>
+            </div>
+          </a>
+
+          <a class="tile doc card-link" href="#" aria-label="Open Friday’s Presentation">
+            <div class="tile__icon">🗂️</div>
+            <div class="tile__title">Friday’s Presentation</div>
+            <div class="tile__actions">
+              <span class="icon-btn" role="button" tabindex="0" aria-label="Kopieer link">🔗</span>
+              <span class="icon-btn" role="button" tabindex="0" aria-label="Delen">👥</span>
+              <span class="icon-btn" role="button" tabindex="0" aria-label="Geschiedenis">🕒</span>
+              <span class="icon-btn" role="button" tabindex="0" aria-label="Favoriet">❤</span>
+            </div>
+          </a>
+
+          <a class="tile photo card-link" href="#" aria-label="Open foto 1">
+            <div class="tile__thumb"></div>
+            <div class="tile__actions">
+              <span class="icon-btn" role="button" tabindex="0">🔗</span>
+              <span class="icon-btn" role="button" tabindex="0">👥</span>
+              <span class="icon-btn" role="button" tabindex="0">🕒</span>
+              <span class="icon-btn" role="button" tabindex="0">❤</span>
+            </div>
+          </a>
+
+          <a class="tile photo card-link" href="#" aria-label="Open foto 2">
+            <div class="tile__thumb"></div>
+            <div class="tile__actions">
+              <span class="icon-btn" role="button" tabindex="0">🔗</span>
+              <span class="icon-btn" role="button" tabindex="0">👥</span>
+              <span class="icon-btn" role="button" tabindex="0">🕒</span>
+              <span class="icon-btn" role="button" tabindex="0">❤</span>
+            </div>
+          </a>
+
+          <a class="tile doc soft card-link" href="#" aria-label="Open Life Goals">
+            <div class="tile__icon">🗂️</div>
+            <div class="tile__title">Life Goals</div>
+            <div class="tile__actions">
+              <span class="icon-btn" role="button" tabindex="0">🔗</span>
+              <span class="icon-btn" role="button" tabindex="0">👥</span>
+              <span class="icon-btn" role="button" tabindex="0">🕒</span>
+              <span class="icon-btn" role="button" tabindex="0">❤</span>
+            </div>
+          </a>
+
+          <a class="tile photo wide card-link" href="#" aria-label="Speel video">
+            <div class="tile__thumb"></div>
+            <div class="tile__play" aria-hidden="true">▶</div>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
 </html>
+
