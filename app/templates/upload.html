@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Upload Bestand</h1>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <div class="upload-area" id="uploadArea">
+    <div class="upload-content">
+      <div class="upload-icon">📁</div>
+      <h2>Sleep je bestanden hierheen</h2>
+      <p>of klik om een bestand te selecteren</p>
+      <form id="uploadForm" method="POST" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="file" multiple style="display: none;">
+        <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+          Bestand Selecteren
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="upload-info">
+    <p>Ondersteunde bestandstypen: Alle bestanden</p>
+    <p>Maximale bestandsgrootte: 100MB</p>
+  </div>
+</div>
+
+<style>
+.upload-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.upload-area {
+  border: 3px dashed #ccc;
+  border-radius: 10px;
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-area:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.upload-area.dragover {
+  border-color: #007bff;
+  background-color: #e6f3ff;
+}
+
+.upload-content {
+  pointer-events: none;
+}
+
+.upload-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.upload-area h2 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.upload-area p {
+  margin: 0 0 30px 0;
+  color: #666;
+}
+
+.upload-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+  background-color: #0056b3;
+}
+
+.upload-info {
+  margin-top: 30px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.upload-info p {
+  margin: 5px 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const uploadArea = document.getElementById('uploadArea');
+  const fileInput = document.getElementById('fileInput');
+  const uploadForm = document.getElementById('uploadForm');
+
+  // Drag and drop functionality
+  uploadArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      fileInput.files = files;
+      uploadForm.submit();
+    }
+  });
+
+  // Click to upload
+  uploadArea.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  // File input change
+  fileInput.addEventListener('change', function() {
+    if (this.files.length > 0) {
+      uploadForm.submit();
+    }
+  });
+});
+</script>
+{% endblock %}
