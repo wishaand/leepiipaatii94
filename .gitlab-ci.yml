@@ -1,35 +1,26 @@
-# GitLab CI configuration that works without specific runners
-# Uses shared runners or manual deployment
+# This file is based on a template, taken from 
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Docker.gitlab-ci.yml
+# Docker-in-Docker documentation: https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+# Set the environment variables in your project
+# Following https://www.digitalocean.com/community/tutorials/how-to-set-up-a-continuous-deployment-pipeline-with-gitlab-ci-cd-on-ubuntu-18-04
 
 variables:
   DEPLOY_MKDOCS: "true"
 
-# Build job for documentation
-build_docs:
+# NOTE: This job has to be called "pages" to be able to deploy to Gitlab Pages!
+pages:
   image: python:3.9-slim
   stage: build
+  when: always
+  tags:
+  - hva
   before_script:
-  - apt update && apt-get install -y git
-  - pip install --upgrade pip
-  - pip install -r docs/requirements.txt
+  - time apt update && apt-get install -y git
+  - time pip install -r docs/requirements.txt
+  - time git clone https://uva-hva.gitlab.host/hbo-ict/mdocotion.git mdocotion
+  - time cd mdocotion && python setup.py install && cd ..
   script:
-  - mkdocs build --site-dir public --config-file mkdocs.yml
-  artifacts:
-    paths:
-    - public
-    expire_in: 1 week
-  rules:
-  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DEPLOY_MKDOCS == "true"
-
-# Pages deployment job
-pages:
-  image: alpine:latest
-  stage: deploy
-  dependencies:
-  - build_docs
-  script:
-  - echo "Deploying to GitLab Pages"
-  - cp -r public/* .
+  - time mkdocs build --site-dir public --config-file mkdocs.yml
   artifacts:
     paths:
     - public

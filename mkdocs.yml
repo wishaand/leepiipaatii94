@@ -5,9 +5,14 @@ copyright: Copyright 2024 Hogeschool van Amsterdam
 
 theme:
     name: material
-    language: nl
+
+    custom_dir: mdocotion/
+    hide_site_name: true
+    content_margin_top: 0px
+    header_color: "rgb(255, 255, 255, 0.2)"
     logo: assets/logo.png
     favicon: assets/logo.png
+    language: nl
 
     features:
         - search.share
@@ -32,6 +37,8 @@ plugins:
               min-height: "360px"
     - section-index
     - autolinks
+    - macros:
+          modules: [mkdocs_macros_mdocotion]
     - git-revision-date-localized:
           enabled: true
           fallback_to_build_date: true
