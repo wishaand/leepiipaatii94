@@ -50,3 +50,5 @@ def upload_file():
         flash(f'Bestanden succesvol geüpload: {", ".join(uploaded_files)}')
     
     return redirect(url_for('upload.index'))
+
+
