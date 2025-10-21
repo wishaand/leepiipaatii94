@@ -1,20 +1,35 @@
-# Simplified GitLab CI configuration for MkDocs deployment
-# This version removes external dependencies and uses standard runners
+# GitLab CI configuration that works without specific runners
+# Uses shared runners or manual deployment
 
 variables:
   DEPLOY_MKDOCS: "true"
 
-# NOTE: This job has to be called "pages" to be able to deploy to Gitlab Pages!
-pages:
+# Build job for documentation
+build_docs:
   image: python:3.9-slim
   stage: build
-  when: always
   before_script:
   - apt update && apt-get install -y git
   - pip install --upgrade pip
   - pip install -r docs/requirements.txt
   script:
   - mkdocs build --site-dir public --config-file mkdocs.yml
+  artifacts:
+    paths:
+    - public
+    expire_in: 1 week
+  rules:
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DEPLOY_MKDOCS == "true"
+
+# Pages deployment job
+pages:
+  image: alpine:latest
+  stage: deploy
+  dependencies:
+  - build_docs
+  script:
+  - echo "Deploying to GitLab Pages"
+  - cp -r public/* .
   artifacts:
     paths:
     - public
