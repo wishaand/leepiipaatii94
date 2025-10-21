@@ -1,8 +1,5 @@
-# This file is based on a template, taken from 
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Docker.gitlab-ci.yml
-# Docker-in-Docker documentation: https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
-# Set the environment variables in your project
-# Following https://www.digitalocean.com/community/tutorials/how-to-set-up-a-continuous-deployment-pipeline-with-gitlab-ci-cd-on-ubuntu-18-04
+# Simplified GitLab CI configuration for MkDocs deployment
+# This version removes external dependencies and uses standard runners
 
 variables:
   DEPLOY_MKDOCS: "true"
@@ -12,15 +9,12 @@ pages:
   image: python:3.9-slim
   stage: build
   when: always
-  tags:
-  - hva
   before_script:
-  - time apt update && apt-get install -y git
-  - time pip install -r docs/requirements.txt
-  - time git clone https://uva-hva.gitlab.host/hbo-ict/mdocotion.git mdocotion
-  - time cd mdocotion && python setup.py install && cd ..
+  - apt update && apt-get install -y git
+  - pip install --upgrade pip
+  - pip install -r docs/requirements.txt
   script:
-  - time mkdocs build --site-dir public --config-file mkdocs.yml
+  - mkdocs build --site-dir public --config-file mkdocs.yml
   artifacts:
     paths:
     - public
