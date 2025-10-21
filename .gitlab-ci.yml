@@ -5,7 +5,7 @@
 # Following https://www.digitalocean.com/community/tutorials/how-to-set-up-a-continuous-deployment-pipeline-with-gitlab-ci-cd-on-ubuntu-18-04
 
 variables:
-  DEPLOY_MKDOCS: "false"
+  DEPLOY_MKDOCS: "true"
 
 # NOTE: This job has to be called "pages" to be able to deploy to Gitlab Pages!
 pages:
