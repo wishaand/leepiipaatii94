@@ -5,19 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{"title" }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <style>
-    .flash-messages {
-      margin: 10px 0;
-    }
-    .flash-message {
-      padding: 10px 15px;
-      margin: 5px 0;
-      border-radius: 4px;
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-  </style>
 </head>
 <body>
   <div class="layout">
@@ -39,6 +26,8 @@
         </a>
         <a class="nav-item" href="{{ url_for('main.about_me') }}">
           <span class="nav-ico">👤</span><span>Over Mij</span>
+        <a class="nav-item" href="{{ url_for('main.favorites') }}">
+          <span class="nav-ico">⭐</span><span>Favorieten</span>
         </a>
       </nav>
     </aside>

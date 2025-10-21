@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Favorieten</h1>
+{% endblock %}
+
+{% block content %}
+<div class="favorites-container">
+  <h3>Mijn Favoriete Bestanden</h3>
+  
+  <div class="favorites-grid">
+    <div class="favorite-item">
+      <div class="favorite-icon">📄</div>
+      <div class="favorite-info">
+        <h4>Belangrijk Document</h4>
+        <p>Laatst geopend: 2 uur geleden</p>
+      </div>
+      <div class="favorite-actions">
+        <button class="icon-btn">👁</button>
+        <button class="icon-btn">⭐</button>
+      </div>
+    </div>
+
+    <div class="favorite-item">
+      <div class="favorite-icon">📊</div>
+      <div class="favorite-info">
+        <h4>Project Data</h4>
+        <p>Laatst geopend: 1 dag geleden</p>
+      </div>
+      <div class="favorite-actions">
+        <button class="icon-btn">👁</button>
+        <button class="icon-btn">⭐</button>
+      </div>
+    </div>
+
+    <div class="favorite-item">
+      <div class="favorite-icon">🖼️</div>
+      <div class="favorite-info">
+        <h4>Team Foto</h4>
+        <p>Laatst geopend: 3 dagen geleden</p>
+      </div>
+      <div class="favorite-actions">
+        <button class="icon-btn">👁</button>
+        <button class="icon-btn">⭐</button>
+      </div>
+    </div>
+
+    <div class="favorite-item">
+      <div class="favorite-icon">📋</div>
+      <div class="favorite-info">
+        <h4>Notities</h4>
+        <p>Laatst geopend: 1 week geleden</p>
+      </div>
+      <div class="favorite-actions">
+        <button class="icon-btn">👁</button>
+        <button class="icon-btn">⭐</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

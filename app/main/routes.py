@@ -26,3 +26,6 @@ def upload():
 @bp.route("/search")
 def search():
     return render_template("search.html")
+@bp.route("/favorieten")
+def favorites():
+    return render_template("favorites.html")
