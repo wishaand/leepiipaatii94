@@ -13,6 +13,7 @@ body {
   scroll-behavior: smooth;
 }
 
+<<<<<<< HEAD
 /* Navigatie */
 .navbar {
   position: fixed;
@@ -26,6 +27,78 @@ body {
   backdrop-filter: blur(12px);
   z-index: 100;
 }
+=======
+  /* ===== Upload Page ===== */
+  .upload-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .files-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .files-section h3 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .refresh-btn {
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    display: inline-block;
+  }
+  
+  .refresh-btn:hover {
+    background: #0056b3;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .files-list {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: white;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .file-name {
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .download-btn {
+    background: #28a745;
+    color: white;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .download-btn:hover {
+    background: #218838;
+    color: white;
+  }
+>>>>>>> f0fd2b0 (code vooor het uploaden vanaf mijn website naar nextcloud)
 
 .logo {
   font-weight: 700;

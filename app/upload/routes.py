@@ -1,21 +1,14 @@
-import os
-from flask import render_template, request, redirect, url_for, flash
-from werkzeug.utils import secure_filename
-
+from flask import render_template, request, redirect, url_for, flash, jsonify, send_file
 from app.upload import bp
-
-# Upload configuration
-UPLOAD_FOLDER = 'app/static/uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', 'mp4', 'mp3', 'wav'}
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+from app.file_upload_service import FileUploadService
+import io
 
 @bp.route("/")
 def index():
     """Upload page"""
-    return render_template("upload.html")
+    # Load files from Nextcloud
+    files = FileUploadService.list_files()
+    return render_template("upload.html", files=files)
 
 @bp.route("/upload", methods=["POST"])
 def upload_file():
@@ -24,31 +17,33 @@ def upload_file():
         flash('Geen bestand geselecteerd')
         return redirect(url_for('upload.index'))
     
-    files = request.files.getlist('file')
+    file = request.files['file']
     
-    if not files or all(file.filename == '' for file in files):
+    if not file or file.filename == '':
         flash('Geen bestand geselecteerd')
         return redirect(url_for('upload.index'))
     
-    uploaded_files = []
-    
-    for file in files:
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            
-            # Create upload directory if it doesn't exist
-            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-            
-            # Save file
-            file_path = os.path.join(UPLOAD_FOLDER, filename)
-            file.save(file_path)
-            uploaded_files.append(filename)
-        else:
-            flash(f'Bestandstype niet toegestaan: {file.filename}')
-    
-    if uploaded_files:
-        flash(f'Bestanden succesvol geüpload: {", ".join(uploaded_files)}')
+    # Use FileUploadService to upload to Nextcloud
+    success, message = FileUploadService.upload_file(file)
+    flash(message)
     
     return redirect(url_for('upload.index'))
+
+
+@bp.route("/download/<filename>")
+def download_file(filename):
+    """Download file from Nextcloud"""
+    file_content = FileUploadService.download_file(filename)
+    
+    if file_content:
+        return send_file(
+            io.BytesIO(file_content),
+            as_attachment=True,
+            download_name=filename,
+            mimetype='application/octet-stream'
+        )
+    else:
+        flash(f'Bestand {filename} niet gevonden', 'error')
+        return redirect(url_for('upload.index'))
 
 

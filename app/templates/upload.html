@@ -24,6 +24,23 @@
     <p>Ondersteunde bestandstypen: Alle bestanden</p>
     <p>Maximale bestandsgrootte: 100MB</p>
   </div>
+  
+  <div class="files-section">
+    <h3>Bestanden in Nextcloud</h3>
+    <a href="{{ url_for('upload.index') }}" class="refresh-btn">🔄 Ververs</a>
+    <div class="files-list">
+      {% if files %}
+        {% for file in files %}
+        <div class="file-item">
+          <span class="file-name">{{ file }}</span>
+          <a href="{{ url_for('upload.download_file', filename=file) }}" class="download-btn">📥 Download</a>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>Geen bestanden gevonden in Nextcloud.</p>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endblock %}
 
