@@ -1,32 +1,82 @@
 {% extends 'base.html' %}
 
-{% block header %}
-<h1>{% block title %}{% endblock %}</h1>
-{% endblock %}
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EuroVault Login</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="login-container">
-        <div class="login-box">
-            <h1>EuroVault</h1>
-            <p>Log in om verder te gaan</p>
-            <form>
-                <input type="email" placeholder="E-mailadres" required>
-                <input type="password" placeholder="Wachtwoord" required>
-                <button type="submit">Log in</button>
-            </form>
-            <p class="small-text"><a href="#">Wachtwoord vergeten?</a></p>
-        </div>
-    </div>
-</body>
-</html>
-
 {% block content %}
-  <p>Creating Tomorrow</p>
+<header class="navbar">
+  <div class="logo">EuroVault</div>
+  <nav>
+    <a href="#about">Over</a>
+    <a href="#features">Functionaliteiten</a>
+    <a href="#security">Veiligheid</a>
+    <a href="#plans">Pakketten</a>
+    <a href="{{ url_for('main.upload') }}" class="btn-nav">Upload</a>
+    <a href="{{ url_for('main.login') }}" class="btn-nav">Log in</a>
+  </nav>
+</header>
+
+<section class="hero fade-in">
+  <div class="hero-content">
+    <h1>Jouw Europese Cloudoplossing</h1>
+    <p>Veilig. Transparant. Volledig AVG-conform.</p>
+    <a href="{{ url_for('main.login') }}" class="btn-primary">Aanmelden</a>
+  </div>
+</section>
+
+<section id="about" class="section fade-in">
+  <h2>Over EuroVault</h2>
+  <p>EuroVault is een toegankelijke, gebruiksvriendelijke en veilige webapplicatie waarmee bedrijven hun bestanden kunnen uploaden, beheren en opslaan in de cloud. 
+    De oplossing richt zich op privacy, transparantie en naleving van Europese wetgeving (GDPR/AVG). 
+    EuroVault maakt gebruik van <strong>Nextcloud</strong> — open source, betrouwbaar en volledig Europees.</p>
+</section>
+
+<section id="features" class="features fade-in">
+  <h2>Functionaliteiten</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h3>📁 Bestanden beheren</h3>
+      <p>Eenvoudig uploaden, downloaden en organiseren van bestanden via een intuïtieve interface.</p>
+    </div>
+    <div class="feature-card">
+      <h3>👥 Gebruikersbeheer</h3>
+      <p>Beheerders kunnen gebruikers toevoegen, rechten instellen en mappen delen binnen teams.</p>
+    </div>
+    <div class="feature-card">
+      <h3>🔐 Beveiliging</h3>
+      <p>Gebruik van end-to-end encryptie en veilige authenticatie via Nextcloud’s beveiligingslaag.</p>
+    </div>
+    <div class="feature-card">
+      <h3>🌍 Europese servers</h3>
+      <p>Alle data wordt opgeslagen binnen Europa, beschermd tegen de Amerikaanse Cloud Act.</p>
+    </div>
+  </div>
+</section>
+
+<section id="security" class="section fade-in">
+  <h2>Veiligheid en Transparantie</h2>
+  <p>Dankzij de open source aard van Nextcloud is de code volledig controleerbaar en worden er regelmatig onafhankelijke beveiligingsaudits uitgevoerd. 
+    Zo blijft jouw data beschermd en volledig eigendom van jouw organisatie — zonder afhankelijkheid van buitenlandse partijen.</p>
+</section>
+
+<section id="plans" class="plans fade-in">
+  <h2>Toekomstige Abonnementen</h2>
+  <div class="plan-grid">
+    <div class="plan-card">
+      <h3>Small Business</h3>
+      <p>5 gebruikers<br>100 GB opslag</p>
+    </div>
+    <div class="plan-card featured">
+      <h3>Medium Business</h3>
+      <p>25 gebruikers<br>1 TB opslag</p>
+    </div>
+    <div class="plan-card">
+      <h3>Enterprise</h3>
+      <p>Maatwerkoplossing<br>Volledig flexibel</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 EuroVault. Alle rechten voorbehouden. | Gehost binnen Europa 🇪🇺</p>
+</footer>
 {% endblock %}
+
+

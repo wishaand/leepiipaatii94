@@ -11,3 +11,14 @@ def index():
 @bp.route("/over-mij")
 def about_me():
     return render_template("zelfportret.html")
+
+
+@bp.route("/login")
+def login():
+    return render_template("login.html")
+
+
+@bp.route("/upload")
+def upload():
+    return render_template("upload.html")
+
