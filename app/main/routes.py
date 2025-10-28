@@ -22,3 +22,7 @@ def login():
 def upload():
     return render_template("upload.html")
 
+
+@bp.route("/search")
+def search():
+    return render_template("search.html")
