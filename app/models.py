@@ -4,19 +4,43 @@ from flask_login import UserMixin
 from app import db, login
 
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    first_name = db.Column(db.String(100))
-    last_name = db.Column(db.String(100))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    __tablename__ = 'gebruiker'
+    
+    gebruiker_id = db.Column(db.Integer, primary_key=True)
+    naam = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    wachtwoord = db.Column(db.String(255), nullable=False)
+    rol = db.Column(db.Enum('gebruiker', 'admin'), default='gebruiker')
+    aanmaakdatum = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    registratie = db.relationship('Registration', backref='gebruiker', lazy=True)
+    logins = db.relationship('Login', backref='gebruiker', lazy=True)
+    
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
+        self.wachtwoord = generate_password_hash(password)
+    
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.wachtwoord, password)
+
+class Registration(db.Model):
+    __tablename__ = 'registratie'
+    
+    registratie_id = db.Column(db.Integer, primary_key=True)
+    gebruiker_id = db.Column(db.Integer, db.ForeignKey('gebruiker.gebruiker_id'))
+    verificatie_token = db.Column(db.String(255))
+    status = db.Column(db.Enum('in_afwachting', 'bevestigd', 'afgewezen'), default='in_afwachting')
+    registratie_datum = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Login(db.Model):
+    __tablename__ = 'login'
+    
+    login_id = db.Column(db.Integer, primary_key=True)
+    gebruiker_id = db.Column(db.Integer, db.ForeignKey('gebruiker.gebruiker_id'), nullable=False)
+    login_tijd = db.Column(db.DateTime, default=datetime.utcnow)
+    ip_adres = db.Column(db.String(45))
+    succes = db.Column(db.Boolean, default=True)
 
 @login.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+def load_user(id):
+    return User.query.get(int(id))
