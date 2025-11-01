@@ -22,6 +22,6 @@ def login():
 def upload():
     return render_template("upload.html")
 
-@bp.route("/register", methods=["GET"])
-def register():
-    return render_template("register.html")
+@bp.route("/registeer", methods=["GET"])
+def registeer():
+    return render_template("registeer.html")
