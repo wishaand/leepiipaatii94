@@ -1,44 +1,35 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>Log in</h1>
+<h1>Inloggen</h1>
 {% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inloggen | EuroVault</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body class="login-body">
-
+<div class="login-body">
   <div class="login-container">
-    <div class="eurovault-logo">
-      <div class="logo-ring"></div>
-      <h1>EuroVault</h1>
+    <div class="login-box">
+      <div class="eurovault-logo">
+        <div class="logo-ring"></div>
+        <h1>EuroVault</h1>
+      </div>
+
+      <p class="login-subtitle">Veilig inloggen in jouw Europese Cloudomgeving</p>
+
+      <form action="{{ url_for('main.login') }}" method="post" class="auth-form">
+        <input type="email" name="email" placeholder="E-mailadres of gebruikersnaam" required>
+        <input type="password" name="password" placeholder="Wachtwoord" required>
+        <button type="submit">Inloggen</button>
+      </form>
+
+      <div class="login-links">
+        <a href="#">Wachtwoord vergeten?</a>
+        <a href="{{ url_for('main.register') }}">Nieuw account aanmaken</a>
+      </div>
+
+      <footer class="login-footer">
+        <p>© 2025 EuroVault — Europese Cloudopslag volgens AVG / GDPR</p>
+      </footer>
     </div>
-
-    <p class="login-subtitle">Veilig inloggen in jouw Europese Cloudomgeving</p>
-
-    <form class="login-form">
-      <input type="email" placeholder="E-mailadres of gebruikersnaam" required />
-      <input type="password" placeholder="Wachtwoord" required />
-      <button type="submit">Inloggen</button>
-    </form>
-
-    <div class="login-links">
-      <a href="#">Wachtwoord vergeten?</a>
-      <a href="{{ url_for('main.register') }}">Nieuw account aanmaken</a>
-    </div>
-
-    <footer class="login-footer">
-      <p>© 2025 EuroVault  Europese Cloudopslag volgens AVG / GDPR</p>
-    </footer>
   </div>
-
-</body>
-</html>
+</div>
 {% endblock %}

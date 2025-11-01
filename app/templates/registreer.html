@@ -1,23 +1,37 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>{% block title %}Registreren{% endblock %}</h1>
+<h1>Registreren</h1>
 {% endblock %}
 
 {% block content %}
-<div class="login-container">
+<div class="login-body">
+  <div class="login-container">
     <div class="login-box">
+      <div class="eurovault-logo">
+        <div class="logo-ring"></div>
         <h1>EuroVault</h1>
-        <p>Maak een account aan</p>
-        <form action="{{ url_for('main.register') }}" method="post">
-            <input type="text" name="first_name" placeholder="Voornaam" required>
-            <input type="text" name="last_name" placeholder="Achternaam" required>
-            <input type="email" name="email" placeholder="E-mailadres" required>
-            <input type="tel" name="phone" placeholder="Telefoonnummer" required>
-            <input type="password" name="password" placeholder="Wachtwoord" required>
-            <button type="submit">Account aanmaken</button>
-        </form>
+      </div>
+
+      <p class="login-subtitle">Maak een account aan</p>
+
+      <form action="{{ url_for('main.register') }}" method="post" class="auth-form">
+        <input type="text" name="first_name" placeholder="Voornaam" required>
+        <input type="text" name="last_name" placeholder="Achternaam" required>
+        <input type="email" name="email" placeholder="E-mailadres" required>
+        <input type="tel" name="phone" placeholder="Telefoonnummer" required>
+        <input type="password" name="password" placeholder="Wachtwoord" required>
+        <button type="submit">Account aanmaken</button>
+      </form>
+
+      <div class="login-links">
         <p class="small-text">Heb je al een account? <a href="{{ url_for('main.login') }}">Log in</a></p>
+      </div>
+
+      <footer class="login-footer">
+        <p>© 2025 EuroVault — Europese Cloudopslag volgens AVG / GDPR</p>
+      </footer>
     </div>
+  </div>
 </div>
 {% endblock %}
