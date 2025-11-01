@@ -4,11 +4,12 @@
 <h1>{% block title %}Registreren{% endblock %}</h1>
 {% endblock %}
 
+{% block content %}
 <div class="login-container">
     <div class="login-box">
         <h1>EuroVault</h1>
         <p>Maak een account aan</p>
-        <form action="{{ url_for('main.register') }}">
+        <form action="{{ url_for('main.register') }}" method="post">
             <input type="text" name="first_name" placeholder="Voornaam" required>
             <input type="text" name="last_name" placeholder="Achternaam" required>
             <input type="email" name="email" placeholder="E-mailadres" required>
@@ -16,10 +17,7 @@
             <input type="password" name="password" placeholder="Wachtwoord" required>
             <button type="submit">Account aanmaken</button>
         </form>
-        <p class="small-text">Heb je al een account? <a href="{{ url_for('main.index') }}">Log in</a></p>
+        <p class="small-text">Heb je al een account? <a href="{{ url_for('main.login') }}">Log in</a></p>
     </div>
-  </div>
-
-
-{% block content %}
+</div>
 {% endblock %}

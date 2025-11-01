@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request  # added request
 
 from app.main import bp
 
@@ -22,6 +22,10 @@ def login():
 def upload():
     return render_template("upload.html")
 
-@bp.route("/registeer", methods=["GET"])
-def registeer():
-    return render_template("registeer.html")
+
+@bp.route("/registreer", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        # TODO: verwerk registratie (valideer, maak gebruiker aan, redirect)
+        pass
+    return render_template("registreer.html")
