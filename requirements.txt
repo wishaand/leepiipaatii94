@@ -23,4 +23,5 @@ pymysql==1.0.2
 python-dotenv==0.19.0
 requests==2.26.0
 paramiko==2.8.1  # For SFTP
-werkzeug==2.0.1
+werkzeug==2.0.1python-dotenv==1.0.1
+Flask-WTF==1.2.2

@@ -16,6 +16,7 @@
       <p class="login-subtitle">Veilig inloggen in jouw Europese Cloudomgeving</p>
 
       <form action="{{ url_for('main.login') }}" method="post" class="auth-form">
+        {{ csrf_token() }}
         <input type="email" name="email" placeholder="E-mailadres of gebruikersnaam" required>
         <input type="password" name="password" placeholder="Wachtwoord" required>
         <button type="submit">Inloggen</button>

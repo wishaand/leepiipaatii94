@@ -30,3 +30,5 @@ class Config:
 
     # App security
     SECRET_KEY = os.getenv("SECRET_KEY", "change-me-replace-in-prod")
+
+    WTF_CSRF_ENABLED = False

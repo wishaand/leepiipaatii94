@@ -16,6 +16,7 @@
       <p class="login-subtitle">Maak een account aan</p>
 
       <form action="{{ url_for('main.register') }}" method="post" class="auth-form">
+        {{ csrf_token() }}
         <input type="text" name="first_name" placeholder="Voornaam" required>
         <input type="text" name="last_name" placeholder="Achternaam" required>
         <input type="email" name="email" placeholder="E-mailadres" required>
