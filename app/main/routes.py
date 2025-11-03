@@ -1,4 +1,5 @@
-from flask import render_template, request  # added request
+<<<<<<< Updated upstream
+from flask import render_template, request, redirect, url_for
 
 from app.main import bp
 
@@ -26,6 +27,11 @@ def upload():
 @bp.route("/registreer", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # TODO: verwerk registratie (valideer, maak gebruiker aan, redirect)
-        pass
+        first_name = request.form.get("first_name")
+        last_name = request.form.get("last_name") 
+        email = request.form.get("email")
+        phone = request.form.get("phone")
+        password = request.form.get("password")
+        # TODO: add validation and database storage logic here
+        return redirect(url_for("main.index"))
     return render_template("registreer.html")
