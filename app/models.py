@@ -1,8 +1,8 @@
-from datetime import datetime
+from app import db, login
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "gebruiker"
 
     gebruiker_id = db.Column(db.Integer, primary_key=True)
@@ -21,15 +21,13 @@ class User(db.Model):
     def get_id(self):
         return str(self.gebruiker_id)
 
+# register loader using the login instance from app
+@login.user_loader
 def load_user(user_id):
     try:
         return User.query.get(int(user_id))
     except Exception:
         return None
-
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
 
 import pytest
 
