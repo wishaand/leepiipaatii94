@@ -130,8 +130,13 @@ class FileUploadService:
         if not file or file.filename == '':
             return False, "Geen bestand geselecteerd"
         
-        if not cls.allowed_file(file.filename):
-            return False, f"Bestandstype niet toegestaan: {file.filename}"
+        # Check file size instead of extension (allow all file types)
+        file.seek(0, 2)  # Seek to end
+        file_size = file.tell()
+        file.seek(0)  # Reset to beginning
+        
+        if file_size > cls.MAX_FILE_SIZE:
+            return False, f"Bestand is te groot. Maximum: {cls.MAX_FILE_SIZE / 1024 / 1024}MB"
         
         try:
             # Tijdelijk opslaan

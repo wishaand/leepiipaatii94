@@ -11,10 +11,13 @@
       <div class="upload-content">
         <div class="upload-icon">📁</div>
         <h2>Selecteer je bestanden</h2>
-        <p>Klik op de knop hieronder om bestanden te uploaden</p>
-        <input type="file" name="file" multiple class="file-input">
+        <p>Kies je bestanden om te uploaden naar Nextcloud</p>
+        <label for="file-input" class="file-select-btn">
+          📎 Kies Bestanden
+          <input type="file" name="file" multiple class="file-input" id="file-input">
+        </label>
         <button type="submit" class="upload-btn">
-          Upload Bestanden
+          ⬆️ Upload Bestanden
         </button>
       </div>
     </div>
@@ -26,8 +29,10 @@
   </div>
   
   <div class="files-section">
-    <h3>Bestanden in Nextcloud</h3>
-    <a href="{{ url_for('upload.index') }}" class="refresh-btn">🔄 Ververs</a>
+    <h3>
+      Bestanden in Nextcloud
+      <a href="{{ url_for('upload.index') }}" class="refresh-btn">🔄 Ververs</a>
+    </h3>
     <div class="files-list">
       {% if files %}
         {% for file in files %}
@@ -37,7 +42,9 @@
         </div>
         {% endfor %}
       {% else %}
-        <p>Geen bestanden gevonden in Nextcloud.</p>
+        <div class="file-item" style="justify-content: center; padding: 40px;">
+          <p style="color: #888; margin: 0; font-style: italic;">Geen bestanden gevonden in Nextcloud.</p>
+        </div>
       {% endif %}
     </div>
   </div>
