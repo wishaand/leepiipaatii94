@@ -21,7 +21,6 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return str(self.gebruiker_id)
 
-# register loader using the login instance from app
 @login.user_loader
 def load_user(user_id):
     try:

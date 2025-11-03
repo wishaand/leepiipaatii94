@@ -3,12 +3,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_wtf import CSRFProtect
+from flask_wtf.csrf import generate_csrf
 from config import Config
 
 # create extensions at module level so models can import them safely
 db = SQLAlchemy()
 login = LoginManager()
-login.login_view = "main.login"
+login.login_view = 'main.login'
+csrf = CSRFProtect()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -16,13 +19,18 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     login.init_app(app)
+    csrf.init_app(app)
+
+    # Make csrf_token() available in Jinja templates
+    app.jinja_env.globals['csrf_token'] = generate_csrf
 
     # register blueprints
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
-    # import models here (safe: db & login already defined)
-    from app import models  # models may use @login.user_loader
+    # register loader (if you use load_user in models)
+    from app.models import load_user
+    login.user_loader(load_user)
 
     return app
 
