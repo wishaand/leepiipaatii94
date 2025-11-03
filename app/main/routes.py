@@ -1,60 +1,44 @@
-from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_user, logout_user, login_required, current_user
-from app.main import bp
+from flask import render_template, redirect, url_for, flash, request
+from flask_login import login_user, logout_user, current_user, login_required
+from . import bp
 from app import db
 from app.models import User
+from app.forms import LoginForm, RegisterForm
 
-# Database-setup is verplaatst naar create_db.py — NIET uitvoeren tijdens module import
-
-@bp.route("/")
+@bp.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
-@bp.route("/over-mij")
+@bp.route('/over-mij')
 def about_me():
-    return render_template("zelfportret.html")
+    return render_template('zelfportret.html')
 
-@bp.route("/login", methods=["GET", "POST"])
+@bp.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for("main.index"))
-    if request.method == "POST":
-        email = request.form.get("email", "").lower()
-        password = request.form.get("password", "")
-        user = User.query.filter_by(email=email).first()
-        if user and user.check_password(password):
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.check_password(form.password.data):
             login_user(user)
-            flash("Je bent succesvol ingelogd", "success")
-            return redirect(url_for("main.index"))
-        flash("Ongeldige email of wachtwoord", "error")
-    return render_template("login.html")
+            return redirect(url_for('main.index'))
+        flash('Ongeldige inloggegevens')
+    return render_template('login.html', form=form)
 
-@bp.route("/registreer", methods=["GET", "POST"])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for("main.index"))
-    if request.method == "POST":
-        email = request.form.get("email", "").lower()
-        if User.query.filter_by(email=email).first():
-            flash("Email bestaat al", "warning")
-            return redirect(url_for("main.register"))
+@bp.route('/registreer', methods=['GET', 'POST'])
+def registreer():
+    form = RegisterForm()
+    if form.validate_on_submit():
         user = User(
-            voornaam=request.form.get("first_name"),
-            achternaam=request.form.get("last_name"),
-            email=email,
-            telefoon=request.form.get("phone")
+            voornaam=form.voornaam.data,
+            achternaam=form.achternaam.data,
+            email=form.email.data
         )
-        user.set_password(request.form.get("password"))
-        try:
-            db.session.add(user)
-            db.session.commit()
-            flash("Account succesvol aangemaakt. Je kunt nu inloggen.", "success")
-            return redirect(url_for("main.login"))
-        except Exception:
-            db.session.rollback()
-            flash("Er is een fout opgetreden. Probeer het opnieuw.", "error")
-            return redirect(url_for("main.register"))
-    return render_template("registreer.html")
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Account aangemaakt! Je kunt nu inloggen.')
+        return redirect(url_for('main.login'))
+    return render_template('registreer.html', form=form)
 
 @bp.route("/logout")
 @login_required
