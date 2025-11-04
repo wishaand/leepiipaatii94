@@ -54,6 +54,17 @@ nav a:hover {
   font-weight: 500;
 }
 
+/* status rechtsboven in nav */
+.main-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.nav-links { list-style: none; display: flex; gap: 1rem; margin: 0; padding: 0; align-items: center; }
+.nav-status { display: flex; align-items: center; gap: 0.6rem; }
+.status-text { color: #333; font-size: 0.95rem; }
+.nav-btn { padding: 6px 12px; border-radius: 6px; text-decoration: none; color: #fff; font-size: 0.9rem; }
+.login-btn { background: #2d9cdb; }
+.register-btn { background: #27ae60; }
+.logout-btn { background: #e74c3c; }
+.nav-btn:hover { opacity: 0.92; }
+
 /* Hero sectie */
 .hero {
   height: 100vh;
@@ -422,4 +433,33 @@ login pagina
     color: #e74c3c;
     margin-top: 3px;
     font-size: 14px;
+}
+
+.form-actions {
+  text-align: center;        /* centreert de inline-block knop */
+  margin-top: 12px;
+}
+
+/* kleine, gecentreerde knop */
+.btn-submit {
+  display: inline-block;
+  padding: 10px 22px;
+  background: #2d9cdb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* alternatief: volledige breedte knop (comment uit als nodig) */
+/*
+.form-actions .btn-submit {
+  display: block;
+  width: 100%;
+}
+*/
+
+.form-actions .btn-submit:hover {
+  opacity: 0.95;
 }

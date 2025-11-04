@@ -18,6 +18,9 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    # veilige engine-opties
+    app.config.setdefault("SQLALCHEMY_ENGINE_OPTIONS", {"pool_pre_ping": True, "pool_recycle": 280})
+
     db.init_app(app)
     login.init_app(app)
     csrf.init_app(app)

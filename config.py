@@ -28,6 +28,12 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # forceer engine options zodat pool oude verbindingen test/vervangt
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 280  # optioneel, in seconden
+    }
+
     # App security
     SECRET_KEY = os.getenv("SECRET_KEY", "change-me-replace-in-prod")
 

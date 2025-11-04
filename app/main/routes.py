@@ -4,6 +4,7 @@ from . import bp
 from app import db
 from app.models import User
 from app.forms import LoginForm, RegisterForm
+from sqlalchemy.exc import OperationalError
 
 @bp.route('/')
 def index():
@@ -12,6 +13,7 @@ def index():
 @bp.route('/over-mij')
 def about_me():
     return render_template('zelfportret.html')
+
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -35,7 +37,13 @@ def registreer():
         )
         user.set_password(form.password.data)
         db.session.add(user)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except OperationalError as e:
+            db.session.rollback()
+            current_app.logger.error("DB OperationalError bij register: %s", e)
+            flash("Er is een verbindingsfout met de database. Probeer het opnieuw.")
+            return redirect(url_for('main.registreer'))
         flash('Account aangemaakt! Je kunt nu inloggen.')
         return redirect(url_for('main.login'))
     return render_template('registreer.html', form=form)
@@ -44,8 +52,7 @@ def registreer():
 @login_required
 def logout():
     logout_user()
-    flash("Je bent uitgelogd", "info")
-    return redirect(url_for("main.index"))
+    return redirect(url_for('main.index'))
 
 @bp.route("/upload", methods=["GET", "POST"])
 def upload():
