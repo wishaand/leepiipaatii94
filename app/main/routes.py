@@ -64,3 +64,8 @@ def upload():
         flash("Bestand ontvangen (debug)", "success")
         return redirect(url_for("main.index"))
     return render_template("upload.html")
+
+
+@bp.route('/contact')
+def contact():
+    return render_template('contact.html')

@@ -61,14 +61,13 @@
   <nav class="main-nav">
     <div class="brand">EuroVault</div>
 
-    <!-- bestaande links -->
     <ul class="nav-links">
       <li><a href="{{ url_for('main.index') }}">Home</a></li>
       <li><a href="{{ url_for('main.upload') }}">Upload</a></li>
+      <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
       <li><a href="{{ url_for('main.about_me') }}">Over Mij</a></li>
     </ul>
 
-    <!-- status / acties rechtsboven -->
     <div class="nav-status">
       {% if current_user.is_authenticated %}
         <span class="status-text">Ingelogd als <strong>{{ current_user.voornaam or current_user.email }}</strong></span>
