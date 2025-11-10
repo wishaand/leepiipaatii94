@@ -66,12 +66,9 @@ def upload():
     return render_template("upload.html")
 
 
-<<<<<<< HEAD
 @bp.route("/search")
 def search():
     return render_template("search.html")
-=======
 @bp.route('/contact')
 def contact():
     return render_template('contact.html')
->>>>>>> database-hbo-ict-cloud
