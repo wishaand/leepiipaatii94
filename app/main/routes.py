@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 from flask import render_template, request, redirect, url_for
 
 from app.main import bp
