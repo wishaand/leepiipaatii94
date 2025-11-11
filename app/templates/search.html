@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block header %}Zoeken{% endblock %}
+
+{% block content %}
+<section class="section fade-in">
+  <h2 class="bestand-titel">Zoek naar bestanden</h2>
+  <p>Typ een bestandsnaam of onderdeel ervan om te zoeken.</p>
+
+  <form class="search-bar" action="" method="get">
+    <input type="text" name="q" placeholder="Zoek bestanden..." aria-label="Zoeken" />
+    <button type="submit" class="btn-primary">Zoek</button>
+  </form>
+
+  <div class="bestand-lijst-afstand">
+    <h3 class="bestand-header">Bestanden op de server:</h3>
+    {% if bestanden and bestanden|length > 0 %}
+      <ul>
+        {% for bestand in bestanden %}
+          <li>{{ bestand }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Er zijn nog geen bestanden geüpload.</p>
+    {% endif %}
+  </div>
+
+  <div class="search-results">
+  </div>
+</section>
+{% endblock %}
+
+

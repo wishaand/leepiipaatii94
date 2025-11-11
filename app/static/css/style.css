@@ -54,6 +54,17 @@ nav a:hover {
   font-weight: 500;
 }
 
+/* status rechtsboven in nav */
+.main-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.nav-links { list-style: none; display: flex; gap: 1rem; margin: 0; padding: 0; align-items: center; }
+.nav-status { display: flex; align-items: center; gap: 0.6rem; }
+.status-text { color: #333; font-size: 0.95rem; }
+.nav-btn { padding: 6px 12px; border-radius: 6px; text-decoration: none; color: #fff; font-size: 0.9rem; }
+.login-btn { background: #2d9cdb; }
+.register-btn { background: #27ae60; }
+.logout-btn { background: #e74c3c; }
+.nav-btn:hover { opacity: 0.92; }
+
 /* Hero sectie */
 .hero {
   height: 100vh;
@@ -208,6 +219,37 @@ footer {
     padding: 70px 10%;
   }
 }
+/* Zoekpagina */
+.search-bar {
+  margin: 30px auto 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.search-bar input[type="text"] {
+  background-color: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  min-width: 320px;
+}
+
+/* Bestand zoeken style */
+.bestand-titel {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.bestand-lijst-afstand {
+  margin-top: 55px;
+  margin-bottom: 40px;
+}
+
+
 login pagina 
 .login-body {
   background-color: #0f1621;
@@ -343,7 +385,7 @@ login pagina
   to { opacity: 1; transform: translateY(0); }
 }
 .login-body {
-  background-color: #0f1621;
+  background-color: #050709;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -351,4 +393,104 @@ login pagina
   color: #fff;
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
+}
+
+.auth-container {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.auth-form .form-group {
+    margin-bottom: 15px;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.auth-form button {
+    width: 100%;
+    padding: 10px;
+    background: #2d9cdb;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.auth-form button:hover {
+    background: #2486be;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.auth-links a {
+    color: #2d9cdb;
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+.form-errors {
+    color: #e74c3c;
+    margin-top: 3px;
+    font-size: 14px;
+}
+
+.form-actions {
+  text-align: center;        /* centreert de inline-block knop */
+  margin-top: 12px;
+}
+
+/* kleine, gecentreerde knop */
+.btn-submit {
+  display: inline-block;
+  padding: 10px 22px;
+  background: #2d9cdb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* alternatief: volledige breedte knop (comment uit als nodig) */
+/*
+.form-actions .btn-submit {
+  display: block;
+  width: 100%;
+}
+*/
+
+.form-actions .btn-submit:hover {
+  opacity: 0.95;
 }
