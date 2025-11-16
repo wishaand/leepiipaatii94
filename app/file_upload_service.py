@@ -8,7 +8,7 @@ import requests
 from flask import current_app
 from requests.auth import HTTPBasicAuth
 from werkzeug.utils import secure_filename
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 import xml.etree.ElementTree as ET
 
 
@@ -36,8 +36,12 @@ class FileUploadService:
         return HTTPBasicAuth(self.username, self.password)
 
     def _build_url(self, filename=""):
-        encoded = quote(filename, safe='')
-        return f"{self.server_url}/remote.php/dav/files/{self.username}/{self.folder}/{encoded}"
+        if filename:
+            encoded = quote(filename, safe='')
+            return f"{self.server_url}/remote.php/dav/files/{self.username}/{self.folder}/{encoded}"
+        else:
+            # Voor folder listing moet URL eindigen met /
+            return f"{self.server_url}/remote.php/dav/files/{self.username}/{self.folder}/"
 
     def allowed_file(self, filename):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in self.allowed_extensions
@@ -47,33 +51,69 @@ class FileUploadService:
     # ---------------------------------------------------
 
     def list_files(self):
+        """Haal bestandenlijst op van Nextcloud."""
         try:
-            url = self._build_url()
+            url = self._build_url()  # Geeft folder URL met trailing /
+            print(f"DEBUG: list_files() called - URL: {url}")
+            
             response = requests.request(
                 "PROPFIND",
                 url,
                 auth=self._auth(),
                 headers={"Depth": "1"},
-                timeout=10
+                timeout=30  # Verhoogd van 10 naar 30 seconden
             )
 
+            print(f"DEBUG: PROPFIND response status: {response.status_code}")
+
             if response.status_code != 207:
+                print(f"PROPFIND failed with status {response.status_code}")
+                print(f"Response: {response.text[:200]}")
                 return []
 
             root = ET.fromstring(response.text)
             files = []
+            
+            # Expected folder path (can be in href as full URL or just path)
+            folder_path_pattern = f"/remote.php/dav/files/{self.username}/{self.folder}/"
+            print(f"DEBUG: Looking for files in folder pattern: {folder_path_pattern}")
 
             for elem in root.findall(".//{DAV:}response"):
                 href = elem.find(".//{DAV:}href")
-                if href is not None:
-                    name = href.text.split("/")[-1]
-                    if name and name != self.folder:
-                        files.append(name)
+                if href is not None and href.text:
+                    # Decode URL-encoded characters
+                    decoded_href = unquote(href.text)
+                    
+                    # Skip if it's a directory (ends with /)
+                    if decoded_href.endswith('/'):
+                        print(f"DEBUG: Skipping directory: {decoded_href}")
+                        continue
+                    
+                    # Check if this file is in our target folder
+                    # href can be full URL or just path, so check for folder pattern
+                    if folder_path_pattern in decoded_href:
+                        # Get just the filename (last part after /)
+                        filename = decoded_href.split('/')[-1]
+                        
+                        # Skip empty names
+                        if filename:
+                            files.append(filename)
+                            print(f"DEBUG: Added file: {filename}")
 
+            print(f"DEBUG: Total files found: {len(files)} - {files}")
             return files
 
+        except requests.exceptions.Timeout as e:
+            print(f"Timeout error listing files: {e}")
+            print("Nextcloud server reageert te traag. Probeer het later opnieuw.")
+            return []
+        except requests.exceptions.RequestException as e:
+            print(f"Network error listing files: {e}")
+            return []
         except Exception as e:
             print("Error listing files:", e)
+            import traceback
+            traceback.print_exc()
             return []
 
     # ---------------------------------------------------
@@ -110,9 +150,6 @@ class FileUploadService:
 
         if size > self.max_file_size:
             return False, f"Bestand groter dan {self.max_file_size/1024/1024}MB"
-
-        if not self.allowed_file(file.filename):
-            return False, "Bestandstype niet toegestaan"
 
         try:
             filename = secure_filename(file.filename)

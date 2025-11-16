@@ -7,6 +7,7 @@ import io
 def index():
     service = FileUploadService()
     files = service.list_files()
+    print(f"DEBUG: Found {len(files)} files: {files}")  # Debug output
     return render_template("upload.html", files=files)
 
 
