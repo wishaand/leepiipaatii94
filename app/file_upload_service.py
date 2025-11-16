@@ -1,160 +1,136 @@
 """
-File Upload Service
-Handles file upload functionality
+File Upload Service (OOP versie)
+Beheert uploaden, downloaden en ophalen van bestanden via Nextcloud.
 """
 
 import os
 import requests
+from flask import current_app
 from requests.auth import HTTPBasicAuth
 from werkzeug.utils import secure_filename
-from flask import current_app
 from urllib.parse import quote
+import xml.etree.ElementTree as ET
+
 
 class FileUploadService:
-    # Lokale configuratie
-    UPLOAD_FOLDER = 'app/static/uploads'
-    ALLOWED_EXTENSIONS = {
-        'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 
-        'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', 'mp4', 'mp3', 'wav'
-    }
-    MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB
-    
-    @classmethod
-    def allowed_file(cls, filename):
-        """Check if file extension is allowed"""
-        return '.' in filename and \
-               filename.rsplit('.', 1)[1].lower() in cls.ALLOWED_EXTENSIONS
-    
-    @classmethod
-    def upload_to_nextcloud(cls, file_path, filename):
-        """Upload file to Nextcloud"""
+    def __init__(self):
+        self.server_url = current_app.config['NEXTCLOUD_SERVER_URL']
+        self.username = current_app.config['NEXTCLOUD_USERNAME']
+        self.password = current_app.config['NEXTCLOUD_PASSWORD']
+        self.folder = current_app.config['NEXTCLOUD_FOLDER']
+
+        self.upload_folder = current_app.config.get('UPLOAD_FOLDER', 'app/static/uploads')
+
+        self.allowed_extensions = {
+            'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx',
+            'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', 'mp4', 'mp3', 'wav'
+        }
+
+        self.max_file_size = 100 * 1024 * 1024  # 100 MB
+
+    # ---------------------------------------------------
+    # Helpers
+    # ---------------------------------------------------
+
+    def _auth(self):
+        return HTTPBasicAuth(self.username, self.password)
+
+    def _build_url(self, filename=""):
+        encoded = quote(filename, safe='')
+        return f"{self.server_url}/remote.php/dav/files/{self.username}/{self.folder}/{encoded}"
+
+    def allowed_file(self, filename):
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in self.allowed_extensions
+
+    # ---------------------------------------------------
+    # LIST FILES
+    # ---------------------------------------------------
+
+    def list_files(self):
         try:
-            server_url = current_app.config['NEXTCLOUD_SERVER_URL']
-            username = current_app.config['NEXTCLOUD_USERNAME']
-            password = current_app.config['NEXTCLOUD_PASSWORD']
-            folder = current_app.config['NEXTCLOUD_FOLDER']
-            
-            # URL encode the filename to handle special characters
-            encoded_filename = quote(filename, safe='')
-            url = f"{server_url}/remote.php/dav/files/{username}/{folder}/{encoded_filename}"
-            
-            print(f"Uploading to: {url}")  # Debug info
-            
-            with open(file_path, 'rb') as file:
-                response = requests.put(
-                    url,
-                    data=file,
-                    auth=HTTPBasicAuth(username, password),
-                    timeout=30
-                )
-            
-            print(f"Response status: {response.status_code}")  # Debug info
-            print(f"Response text: {response.text}")  # Debug info
-            
-            return response.status_code == 201 or response.status_code == 204
-            
-        except Exception as e:
-            print(f"Nextcloud upload error: {e}")  # Debug info
-            return False
-    
-    @classmethod
-    def list_files(cls):
-        """List all files in Nextcloud folder"""
-        try:
-            server_url = current_app.config['NEXTCLOUD_SERVER_URL']
-            username = current_app.config['NEXTCLOUD_USERNAME']
-            password = current_app.config['NEXTCLOUD_PASSWORD']
-            folder = current_app.config['NEXTCLOUD_FOLDER']
-            
-            folder_url = f"{server_url}/remote.php/dav/files/{username}/{folder}/"
-            
+            url = self._build_url()
             response = requests.request(
-                'PROPFIND',
-                folder_url,
-                auth=HTTPBasicAuth(username, password),
-                timeout=10,
-                headers={'Depth': '1'}
-            )
-            
-            if response.status_code == 207:
-                # Parse XML response to extract filenames
-                import xml.etree.ElementTree as ET
-                root = ET.fromstring(response.text)
-                files = []
-                
-                for response_elem in root.findall('.//{DAV:}response'):
-                    href = response_elem.find('.//{DAV:}href')
-                    if href is not None and href.text:
-                        filename = href.text.split('/')[-1]
-                        if filename and filename != folder:  # Skip folder itself
-                            files.append(filename)
-                
-                return files
-            else:
-                return []
-                
-        except Exception as e:
-            print(f"Error listing files: {e}")
-            return []
-    
-    @classmethod
-    def download_file(cls, filename):
-        """Download file from Nextcloud"""
-        try:
-            server_url = current_app.config['NEXTCLOUD_SERVER_URL']
-            username = current_app.config['NEXTCLOUD_USERNAME']
-            password = current_app.config['NEXTCLOUD_PASSWORD']
-            folder = current_app.config['NEXTCLOUD_FOLDER']
-            
-            encoded_filename = quote(filename, safe='')
-            url = f"{server_url}/remote.php/dav/files/{username}/{folder}/{encoded_filename}"
-            
-            response = requests.get(
+                "PROPFIND",
                 url,
-                auth=HTTPBasicAuth(username, password),
-                timeout=30
+                auth=self._auth(),
+                headers={"Depth": "1"},
+                timeout=10
             )
-            
+
+            if response.status_code != 207:
+                return []
+
+            root = ET.fromstring(response.text)
+            files = []
+
+            for elem in root.findall(".//{DAV:}response"):
+                href = elem.find(".//{DAV:}href")
+                if href is not None:
+                    name = href.text.split("/")[-1]
+                    if name and name != self.folder:
+                        files.append(name)
+
+            return files
+
+        except Exception as e:
+            print("Error listing files:", e)
+            return []
+
+    # ---------------------------------------------------
+    # DOWNLOAD
+    # ---------------------------------------------------
+
+    def download_file(self, filename):
+        try:
+            url = self._build_url(filename)
+            response = requests.get(url, auth=self._auth(), timeout=30)
+
             if response.status_code == 200:
                 return response.content
-            else:
-                return None
-                
-        except Exception as e:
-            print(f"Error downloading file: {e}")
+
+            print("Download failed:", response.status_code)
             return None
 
-    @classmethod
-    def upload_file(cls, file):
-        """Main upload method"""
-        if not file or file.filename == '':
-            return False, "Geen bestand geselecteerd"
-        
-        # Check file size instead of extension (allow all file types)
-        file.seek(0, 2)  # Seek to end
-        file_size = file.tell()
-        file.seek(0)  # Reset to beginning
-        
-        if file_size > cls.MAX_FILE_SIZE:
-            return False, f"Bestand is te groot. Maximum: {cls.MAX_FILE_SIZE / 1024 / 1024}MB"
-        
-        try:
-            # Tijdelijk opslaan
-            filename = secure_filename(file.filename)
-            temp_path = os.path.join(cls.UPLOAD_FOLDER, filename)
-            os.makedirs(cls.UPLOAD_FOLDER, exist_ok=True)
-            file.save(temp_path)
-            
-            # Upload naar Nextcloud
-            success = cls.upload_to_nextcloud(temp_path, filename)
-            
-            # Temp file verwijderen
-            os.remove(temp_path)
-            
-            if success:
-                return True, f"Bestand '{file.filename}' succesvol geüpload naar Nextcloud!"
-            else:
-                return False, "Fout bij uploaden naar Nextcloud"
-                
         except Exception as e:
-            return False, f"Fout bij uploaden: {str(e)}"
+            print("Error downloading:", e)
+            return None
+
+    # ---------------------------------------------------
+    # UPLOAD
+    # ---------------------------------------------------
+
+    def upload_file(self, file):
+        if not file or file.filename == "":
+            return False, "Geen bestand geselecteerd"
+
+        # size check
+        file.seek(0, 2)
+        size = file.tell()
+        file.seek(0)
+
+        if size > self.max_file_size:
+            return False, f"Bestand groter dan {self.max_file_size/1024/1024}MB"
+
+        if not self.allowed_file(file.filename):
+            return False, "Bestandstype niet toegestaan"
+
+        try:
+            filename = secure_filename(file.filename)
+            temp_path = os.path.join(self.upload_folder, filename)
+
+            os.makedirs(self.upload_folder, exist_ok=True)
+            file.save(temp_path)
+
+            # upload to nextcloud
+            url = self._build_url(filename)
+            with open(temp_path, "rb") as f:
+                response = requests.put(url, data=f, auth=self._auth(), timeout=30)
+
+            os.remove(temp_path)
+
+            if response.status_code in (201, 204):
+                return True, f"'{filename}' geüpload naar Nextcloud"
+            return False, "Upload mislukt"
+
+        except Exception as e:
+            return False, f"Fout: {e}"
