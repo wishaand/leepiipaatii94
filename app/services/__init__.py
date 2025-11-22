@@ -1,10 +1,20 @@
-from flask import Flask
+# services/__init__.py
+# Exporteert alle services zodat je ze kunt importeren via: from app.services import ...
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_pyfile("config.py")
+# Export alle service classes
+from app.services.upload_service import FileUploadService
+from app.services.nextcloud_client import NextcloudClient
+from app.services.file_validator import FileValidator
+from app.services.temp_storage import TempStorage
 
-    from app.upload import bp as upload_bp
-    app.register_blueprint(upload_bp, url_prefix="/")
+# Export de factory functie
+from app.services.service_factory import build_service
 
-    return app
+# Maak alles beschikbaar voor import
+__all__ = [
+    'FileUploadService',
+    'NextcloudClient',
+    'FileValidator',
+    'TempStorage',
+    'build_service'
+]

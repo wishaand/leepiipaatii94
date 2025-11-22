@@ -2,8 +2,8 @@ from flask import render_template, request, redirect, url_for, flash, send_file
 from app.upload import bp
 import io
 
-# Importeer de service factory
-from app.services.service_factory import build_service
+# Importeer alles vanuit services (via __init__.py)
+from app.services import build_service
 
 
 @bp.route("/")
