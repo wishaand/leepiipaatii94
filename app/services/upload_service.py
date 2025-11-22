@@ -1,5 +1,5 @@
 # upload_service.py
-# Hoofdservice: coördineert alle andere services
+# voert alle andere functies uit om de functie uploaden/downloaden uit te kunnen voeren
 
 from werkzeug.utils import secure_filename
 
@@ -46,7 +46,6 @@ class FileUploadService:
         try:
             # Lees bestand
             content = self.storage.load_bytes(temp_path)
-
             # Upload naar Nextcloud
             ok = self.nc.upload(filename, content)
             if ok:

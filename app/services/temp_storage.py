@@ -1,5 +1,4 @@
-# temp_storage.py
-# Bewaart bestanden tijdelijk lokaal
+# Bewaart bestanden tijdelijk 
 
 import os
 

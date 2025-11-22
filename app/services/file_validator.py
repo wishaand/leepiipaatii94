@@ -1,5 +1,5 @@
 # file_validator.py
-# Controleert of bestanden mogen: type en grootte
+# Controleert of bestanden mogen
 
 import os
 

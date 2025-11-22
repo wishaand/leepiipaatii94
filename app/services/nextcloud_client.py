@@ -1,5 +1,5 @@
 # nextcloud_client.py
-# Praat met Nextcloud: upload, download, lijst ophalen
+# praat met nextcloud
 
 import requests
 from requests.auth import HTTPBasicAuth
