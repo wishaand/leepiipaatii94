@@ -16,6 +16,17 @@ def index():
     return render_template("upload.html", files=files)
 
 
+@bp.route("/downloads")
+def downloads():
+    """Download pagina - toont alle beschikbare bestanden."""
+    service = build_service()
+    files = service.list_files()
+
+    print(f"DEBUG: Download page - Found {len(files)} files: {files}")
+
+    return render_template("download.html", files=files)
+
+
 @bp.route("/upload", methods=["POST"])
 def upload_file():
     file = request.files.get("file")

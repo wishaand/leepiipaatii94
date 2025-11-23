@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Download Bestanden</h1>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <div class="files-section">
+    <h3>
+      Beschikbare Bestanden in Nextcloud
+      <a href="{{ url_for('upload.index') }}" class="refresh-btn">🔄 Ververs</a>
+    </h3>
+    <div class="files-list">
+      {% if files %}
+        {% for file in files %}
+        <div class="file-item">
+          <span class="file-name">{{ file }}</span>
+          <a href="{{ url_for('upload.download_file', filename=file) }}" class="download-btn">📥 Download</a>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="file-item" style="justify-content: center; padding: 40px;">
+          <p style="color: #888; margin: 0; font-style: italic;">Geen bestanden gevonden in Nextcloud.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="upload-info">
+    <p>📁 Alle bestanden worden opgehaald van Nextcloud</p>
+    <p>💾 Klik op Download om een bestand te downloaden</p>
+  </div>
+</div>
+{% endblock %}
+
