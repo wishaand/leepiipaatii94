@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>Upload Bestand</h1>
+<h1>Upload</h1>
 {% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
 <div class="upload-container">
   <form method="POST" action="{{ url_for('upload.upload_file') }}" enctype="multipart/form-data">
     <div class="upload-area">
@@ -47,6 +48,18 @@
         </div>
       {% endif %}
     </div>
+=======
+<div class="upload-body">
+  <div class="upload-container">
+    <div class="upload-box">
+      <p class="upload-subtitle">Kies een bestand om te uploaden</p>
+      <form action="{{ url_for('main.upload') }}" method="post" enctype="multipart/form-data">
+        {{ csrf_token() }}
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+>>>>>>> 020d257f2ea48bdf89b7f5659887157571bb958c
   </div>
 </div>
 {% endblock %}
