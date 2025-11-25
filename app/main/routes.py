@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from . import bp
 from app import db
 from app.models import User
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, ContactForm
 from sqlalchemy.exc import OperationalError
 
 @bp.route('/')
@@ -84,3 +84,13 @@ def search():
 @bp.route("/favorieten")
 def favorites():
     return render_template("favorites.html")
+
+
+@bp.route("/contact", methods=['GET', 'POST'])
+def contact():
+    form = ContactForm()
+    if form.validate_on_submit():
+        # Hier kun je later de contact formulier data verwerken (bijv. email versturen, database opslaan)
+        flash('Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.', 'success')
+        return redirect(url_for('main.contact'))
+    return render_template('contact.html', form=form)
