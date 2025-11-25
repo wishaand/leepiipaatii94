@@ -78,7 +78,35 @@ def upload():
 
 @bp.route("/search")
 def search():
-    return render_template("search.html")
+    """Zoek functie voor bestanden in Nextcloud."""
+    from app.services.service_factory import build_service
+    
+    # Haal zoekterm op uit URL parameter
+    query = request.args.get('q', '').strip()
+    search_results = []
+    all_files = []
+    
+    try:
+        # Haal alle bestanden op uit Nextcloud
+        service = build_service()
+        all_files = service.list_files()
+        
+        # Filter bestanden op basis van zoekterm
+        if query:
+            query_lower = query.lower()
+            search_results = [f for f in all_files if query_lower in f.lower()]
+        else:
+            # Als er geen zoekterm is, toon alle bestanden
+            search_results = all_files
+            
+    except Exception as e:
+        current_app.logger.error(f"Fout bij zoeken: {e}")
+        flash(f"Fout bij het ophalen van bestanden: {str(e)}", "error")
+    
+    return render_template("search.html", 
+                         query=query, 
+                         results=search_results, 
+                         total_files=len(all_files))
 
 
 @bp.route("/favorieten")

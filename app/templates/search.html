@@ -3,31 +3,64 @@
 {% block header %}Zoeken{% endblock %}
 
 {% block content %}
-<section class="section fade-in">
-  <h2 class="bestand-titel">Zoek naar bestanden</h2>
-  <p>Typ een bestandsnaam of onderdeel ervan om te zoeken.</p>
+<div class="upload-container">
+  <div class="upload-info">
+    <h2 class="bestand-titel">Zoek naar bestanden in Nextcloud</h2>
+    <p>Typ een bestandsnaam of onderdeel ervan om te zoeken.</p>
+  </div>
 
-  <form class="search-bar" action="" method="get">
-    <input type="text" name="q" placeholder="Zoek bestanden..." aria-label="Zoeken" />
-    <button type="submit" class="btn-primary">Zoek</button>
+  <form class="search-bar" action="{{ url_for('main.search') }}" method="get">
+    <input 
+      type="text" 
+      name="q" 
+      value="{{ query }}" 
+      placeholder="Zoek bestanden..." 
+      aria-label="Zoeken" 
+    />
+    <button type="submit" class="btn-primary">🔍 Zoek</button>
   </form>
 
-  <div class="bestand-lijst-afstand">
-    <h3 class="bestand-header">Bestanden op de server:</h3>
-    {% if bestanden and bestanden|length > 0 %}
-      <ul>
-        {% for bestand in bestanden %}
-          <li>{{ bestand }}</li>
-        {% endfor %}
-      </ul>
+  <div class="files-section">
+    {% if query %}
+      <h3>
+        Zoekresultaten voor "{{ query }}"
+        {% if results %}
+          <span style="color: #888; font-size: 0.8em;">({{ results|length }} gevonden)</span>
+        {% endif %}
+      </h3>
     {% else %}
-      <p>Er zijn nog geen bestanden geüpload.</p>
+      <h3>
+        Alle bestanden in Nextcloud
+        {% if total_files %}
+          <span style="color: #888; font-size: 0.8em;">({{ total_files }} totaal)</span>
+        {% endif %}
+      </h3>
     {% endif %}
+    
+    <div class="files-list">
+      {% if results and results|length > 0 %}
+        {% for file in results %}
+        <div class="file-item">
+          <span class="file-name">{{ file }}</span>
+          <a href="{{ url_for('upload.download_file', filename=file) }}" class="download-btn">📥 Download</a>
+        </div>
+        {% endfor %}
+      {% elif query %}
+        <div class="file-item" style="justify-content: center; padding: 40px;">
+          <p style="color: #888; margin: 0; font-style: italic;">
+            Geen bestanden gevonden voor "{{ query }}"
+          </p>
+        </div>
+      {% else %}
+        <div class="file-item" style="justify-content: center; padding: 40px;">
+          <p style="color: #888; margin: 0; font-style: italic;">
+            Typ een zoekterm om te beginnen met zoeken.
+          </p>
+        </div>
+      {% endif %}
+    </div>
   </div>
-
-  <div class="search-results">
-  </div>
-</section>
+</div>
 {% endblock %}
 
 
