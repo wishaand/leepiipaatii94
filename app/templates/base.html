@@ -15,7 +15,6 @@
       </div>
 
       <nav class="nav">
-<<<<<<< HEAD
         <a class="nav-item" href="{{ url_for('main.index') }}">
           <span class="nav-ico">🏠</span><span>Home</span>
         </a>
@@ -30,14 +29,10 @@
         </a>
         <a class="nav-item" href="{{ url_for('main.about_me') }}">
           <span class="nav-ico">👤</span><span>Over Mij</span>
+        </a>
         <a class="nav-item" href="{{ url_for('main.favorites') }}">
           <span class="nav-ico">⭐</span><span>Favorieten</span>
         </a>
-=======
-        <a class="nav-item" href="{{ url_for('main.index') }}">Home</a>
-        <a class="nav-item" href="{{ url_for('main.upload') }}">Upload</a>
-        <a class="nav-item" href="{{ url_for('main.about_me') }}">Over Mij</a>
->>>>>>> database-hbo-ict-cloud
       </nav>
     </aside>
 
@@ -63,29 +58,5 @@
       </section>
     </main>
   </div>
-
-  <!-- Main navigation -->
-  <nav class="main-nav">
-    <div class="brand">EuroVault</div>
-
-    <ul class="nav-links">
-      <li><a href="{{ url_for('main.index') }}">Home</a></li>
-      <li><a href="{{ url_for('main.upload') }}">Upload</a></li>
-      <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
-      <li><a href="{{ url_for('main.about_me') }}">Over Mij</a></li>
-    </ul>
-
-    <div class="nav-status">
-      {% if current_user.is_authenticated %}
-        <span class="status-text">Ingelogd als <strong>{{ current_user.voornaam or current_user.email }}</strong></span>
-        <a href="{{ url_for('main.logout') }}" class="nav-btn logout-btn">Uitloggen</a>
-      {% else %}
-        <span class="status-text">Uitgelogd</span>
-        <a href="{{ url_for('main.login') }}" class="nav-btn login-btn">Log in</a>
-        <a href="{{ url_for('main.registreer') }}" class="nav-btn register-btn">Registreren</a>
-      {% endif %}
-    </div>
-  </nav>
 </body>
 </html>
- 

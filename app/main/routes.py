@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from . import bp
 from app import db
@@ -42,7 +42,17 @@ def registreer():
         except OperationalError as e:
             db.session.rollback()
             current_app.logger.error("DB OperationalError bij register: %s", e)
-            flash("Er is een verbindingsfout met de database. Probeer het opnieuw.")
+            error_msg = str(e)
+            # Geef meer details in development mode
+            if current_app.config.get('DEBUG'):
+                flash(f"Database fout: {error_msg}", "error")
+            else:
+                flash("Er is een verbindingsfout met de database. Controleer je database configuratie.", "error")
+            return redirect(url_for('main.registreer'))
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error("Onverwachte fout bij register: %s", e)
+            flash(f"Er is een fout opgetreden: {str(e)}", "error")
             return redirect(url_for('main.registreer'))
         flash('Account aangemaakt! Je kunt nu inloggen.')
         return redirect(url_for('main.login'))
@@ -66,23 +76,11 @@ def upload():
     return render_template("upload.html")
 
 
-<<<<<<< HEAD
 @bp.route("/search")
 def search():
     return render_template("search.html")
+
+
 @bp.route("/favorieten")
 def favorites():
     return render_template("favorites.html")
-=======
-@bp.route("/registreer", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        first_name = request.form.get("first_name")
-        last_name = request.form.get("last_name") 
-        email = request.form.get("email")
-        phone = request.form.get("phone")
-        password = request.form.get("password")
-        # TODO: add validation and database storage logic here
-        return redirect(url_for("main.index"))
-    return render_template("registreer.html")
->>>>>>> 020d257f2ea48bdf89b7f5659887157571bb958c

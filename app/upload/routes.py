@@ -8,23 +8,33 @@ from app.services import build_service
 
 @bp.route("/")
 def index():
-    service = build_service()
-    files = service.list_files()
+    try:
+        service = build_service()
+        files = service.list_files()
 
-    print(f"DEBUG: Found {len(files)} files: {files}")
+        print(f"DEBUG: Found {len(files)} files: {files}")
 
-    return render_template("upload.html", files=files)
+        return render_template("upload.html", files=files)
+    except Exception as e:
+        print(f"ERROR in upload.index: {e}")
+        flash(f"Fout bij het laden van bestanden: {str(e)}", "error")
+        return render_template("upload.html", files=[])
 
 
 @bp.route("/downloads")
 def downloads():
     """Download pagina - toont alle beschikbare bestanden."""
-    service = build_service()
-    files = service.list_files()
+    try:
+        service = build_service()
+        files = service.list_files()
 
-    print(f"DEBUG: Download page - Found {len(files)} files: {files}")
+        print(f"DEBUG: Download page - Found {len(files)} files: {files}")
 
-    return render_template("download.html", files=files)
+        return render_template("download.html", files=files)
+    except Exception as e:
+        print(f"ERROR in upload.downloads: {e}")
+        flash(f"Fout bij het laden van bestanden: {str(e)}", "error")
+        return render_template("download.html", files=[])
 
 
 @bp.route("/upload", methods=["POST"])

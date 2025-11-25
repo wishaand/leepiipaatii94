@@ -28,20 +28,25 @@ def create_app(config_class=Config):
     # Make csrf_token() available in Jinja templates
     app.jinja_env.globals['csrf_token'] = generate_csrf
 
-    # --- Add: test database connection and report to terminal ---
+    # --- Add: test database connection and create tables if needed ---
     try:
         with app.app_context():
             db.session.execute(text("SELECT 1"))
-        app.logger.info("Database connection successful")
-        print("Database connection successful")
+            # Maak tabellen aan als ze niet bestaan
+            db.create_all()
+            app.logger.info("Database connection successful")
+            print("✅ Database connection successful - tabellen zijn aangemaakt/gecontroleerd")
     except Exception as e:
         app.logger.error("Database connection failed: %s", e)
-        print("Database connection failed:", e)
+        print(f"❌ Database connection failed: {e}")
     # --- End added code ---
 
     # register blueprints
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
+    
+    from app.upload import bp as upload_bp
+    app.register_blueprint(upload_bp, url_prefix='/upload')
     
     # register loader (if you use load_user in models)
     from app.models import load_user

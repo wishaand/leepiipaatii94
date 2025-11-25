@@ -30,29 +30,40 @@ class NextcloudClient:
 
     def list_files(self):
         """Haal lijst van bestanden op."""
-        url = self._build_url()
-        response = requests.request("PROPFIND", url, headers={"Depth": "1"}, auth=self._auth(), timeout=30)
+        try:
+            url = self._build_url()
+            response = requests.request("PROPFIND", url, headers={"Depth": "1"}, auth=self._auth(), timeout=30)
 
-        if response.status_code != 207:
+            if response.status_code != 207:
+                print(f"ERROR: Nextcloud PROPFIND returned status {response.status_code}")
+                return []
+
+            # Parse XML response
+            root = ET.fromstring(response.text)
+            files = []
+            folder_path = f"/remote.php/dav/files/{self.username}/{self.folder}/"
+
+            for elem in root.findall(".//{DAV:}response"):
+                href = elem.find(".//{DAV:}href")
+                if href is None:
+                    continue
+
+                decoded = unquote(href.text)
+                if decoded.endswith('/'):
+                    continue  # Skip mappen
+                if folder_path in decoded:
+                    files.append(decoded.split('/')[-1])
+
+            return files
+        except requests.exceptions.Timeout:
+            print("ERROR: Nextcloud request timeout")
             return []
-
-        # Parse XML response
-        root = ET.fromstring(response.text)
-        files = []
-        folder_path = f"/remote.php/dav/files/{self.username}/{self.folder}/"
-
-        for elem in root.findall(".//{DAV:}response"):
-            href = elem.find(".//{DAV:}href")
-            if href is None:
-                continue
-
-            decoded = unquote(href.text)
-            if decoded.endswith('/'):
-                continue  # Skip mappen
-            if folder_path in decoded:
-                files.append(decoded.split('/')[-1])
-
-        return files
+        except requests.exceptions.RequestException as e:
+            print(f"ERROR: Nextcloud request failed: {e}")
+            return []
+        except Exception as e:
+            print(f"ERROR: Unexpected error in list_files: {e}")
+            return []
 
     def upload(self, filename, file_bytes):
         """Upload bestand naar Nextcloud."""
