@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, current_ap
 from flask_login import login_user, logout_user, current_user, login_required
 from . import bp
 from app import db
-from app.models import User
+from app.models import User, Abonnement  # voeg Abonnement toe
 from app.forms import LoginForm, RegisterForm, ContactForm
 from sqlalchemy.exc import OperationalError
 
@@ -122,3 +122,11 @@ def contact():
         flash('Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.', 'success')
         return redirect(url_for('main.contact'))
     return render_template('contact.html', form=form)
+
+@bp.route("/abonnement/<int:abonnement_id>/betalingen")
+def abonnement_betalingen(abonnement_id):
+    """Toon betalingsoverzicht voor één abonnement."""
+    abonnement = Abonnement.query.get_or_404(abonnement_id)
+    # relatie geeft je gratis abonnement.betalingen (get_all_betaling)
+    betalingen = abonnement.betalingen
+    return render_template("betalingen.html", abonnement=abonnement, betalingen=betalingen)
