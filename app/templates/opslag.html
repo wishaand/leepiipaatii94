@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Opslag</h1>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <div class="storage-overview">
+    <div class="storage-card">
+      <h2>📊 Opslag Overzicht</h2>
+      <div class="storage-stats">
+        <div class="stat-item">
+          <span class="stat-label">Gebruikt</span>
+          <span class="stat-value">{{ storage_used }} GB</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Beschikbaar</span>
+          <span class="stat-value">{{ storage_available }} GB</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Totaal</span>
+          <span class="stat-value">{{ storage_total }} GB</span>
+        </div>
+      </div>
+      
+      <div class="storage-bar-container">
+        <div class="storage-bar">
+          <div class="storage-bar-fill" style="width: {{ storage_percentage }}%"></div>
+        </div>
+        <p class="storage-percentage">{{ storage_percentage }}% gebruikt</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="storage-details">
+    <h3>📁 Opslag per Type</h3>
+    <div class="storage-types">
+      {% for type in storage_by_type %}
+      <div class="storage-type-item">
+        <div class="type-icon">{{ type.icon }}</div>
+        <div class="type-info">
+          <span class="type-name">{{ type.name }}</span>
+          <span class="type-size">{{ type.size }} GB</span>
+        </div>
+        <div class="type-bar">
+          <div class="type-bar-fill" style="width: {{ type.percentage }}%"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="storage-files">
+    <h3>📄 Grootste Bestanden</h3>
+    <div class="files-list">
+      {% for file in largest_files %}
+      <div class="file-item">
+        <span class="file-icon">{{ file.icon }}</span>
+        <div class="file-info">
+          <span class="file-name">{{ file.name }}</span>
+          <span class="file-date">{{ file.date }}</span>
+        </div>
+        <span class="file-size">{{ file.size }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

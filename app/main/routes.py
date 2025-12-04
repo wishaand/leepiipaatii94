@@ -114,6 +114,42 @@ def favorites():
     return render_template("favorites.html")
 
 
+@bp.route("/opslag")
+def opslag():
+    """Opslag pagina - toont opslag informatie (nu met voorbeeld data, later Nextcloud)"""
+    # Voorbeeld opslag data
+    storage_total = 100  # GB
+    storage_used = 42.5  # GB
+    storage_available = storage_total - storage_used
+    storage_percentage = round((storage_used / storage_total) * 100, 1)
+    
+    # Opslag per bestandstype (voorbeeld)
+    storage_by_type = [
+        {"name": "Documenten", "size": 15.2, "icon": "📄", "percentage": 35.8},
+        {"name": "Afbeeldingen", "size": 18.5, "icon": "🖼️", "percentage": 43.5},
+        {"name": "Video's", "size": 5.8, "icon": "🎥", "percentage": 13.6},
+        {"name": "Audio", "size": 2.1, "icon": "🎵", "percentage": 4.9},
+        {"name": "Overig", "size": 0.9, "icon": "📦", "percentage": 2.1}
+    ]
+    
+    # Grootste bestanden (voorbeeld)
+    largest_files = [
+        {"name": "project_presentatie.pdf", "size": "2.4 GB", "date": "15 Jan 2025", "icon": "📄"},
+        {"name": "team_foto_2024.jpg", "size": "1.8 GB", "date": "10 Jan 2025", "icon": "🖼️"},
+        {"name": "video_demo.mp4", "size": "1.2 GB", "date": "8 Jan 2025", "icon": "🎥"},
+        {"name": "jaarverslag_2024.pdf", "size": "850 MB", "date": "5 Jan 2025", "icon": "📄"},
+        {"name": "muziek_collectie.zip", "size": "650 MB", "date": "3 Jan 2025", "icon": "🎵"}
+    ]
+    
+    return render_template("opslag.html",
+                         storage_total=storage_total,
+                         storage_used=storage_used,
+                         storage_available=storage_available,
+                         storage_percentage=storage_percentage,
+                         storage_by_type=storage_by_type,
+                         largest_files=largest_files)
+
+
 @bp.route("/contact", methods=['GET', 'POST'])
 def contact():
     form = ContactForm()

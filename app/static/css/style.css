@@ -881,3 +881,184 @@ login pagina
 .form-actions .btn-submit:hover {
   opacity: 0.95;
 }
+
+/* ===== Opslag Page ===== */
+.storage-overview {
+  margin-bottom: 30px;
+}
+
+.storage-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.storage-card h2 {
+  margin: 0 0 25px 0;
+  color: #ffffff;
+  font-size: 1.5rem;
+}
+
+.storage-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-label {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.stat-value {
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.storage-bar-container {
+  margin-top: 20px;
+}
+
+.storage-bar {
+  width: 100%;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.storage-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00b4d8, #0077b6);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.storage-percentage {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
+}
+
+.storage-details {
+  margin-bottom: 30px;
+}
+
+.storage-details h3 {
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
+.storage-types {
+  display: grid;
+  gap: 15px;
+}
+
+.storage-type-item {
+  display: grid;
+  grid-template-columns: 50px 1fr 100px;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.type-icon {
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.type-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.type-name {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.type-size {
+  color: #b0b0b0;
+  font-size: 0.85rem;
+}
+
+.type-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.type-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00b4d8, #0077b6);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.storage-files {
+  margin-top: 30px;
+}
+
+.storage-files h3 {
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
+.storage-files .file-item {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 10px;
+}
+
+.file-icon {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.file-name {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.file-date {
+  color: #b0b0b0;
+  font-size: 0.85rem;
+}
+
+.file-size {
+  color: #00b4d8;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
