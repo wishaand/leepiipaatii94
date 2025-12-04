@@ -27,3 +27,32 @@ def load_user(user_id):
         return User.query.get(int(user_id))
     except Exception:
         return None
+
+class Abonnement(db.Model):
+    __tablename__ = "abonnement"
+
+    id = db.Column(db.Integer, primary_key=True)
+    naam = db.Column(db.String(120), nullable=False)
+    prijs = db.Column(db.Numeric(10, 2), nullable=False)
+    looptijd_maanden = db.Column(db.Integer, nullable=False, default=12)
+    actief = db.Column(db.Boolean, default=True)
+
+    # one-to-many: een abonnement heeft meerdere betalingen
+    betalingen = db.relationship(
+        "Betaling",
+        back_populates="abonnement",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+
+class Betaling(db.Model):
+    __tablename__ = "betaling"
+
+    id = db.Column(db.Integer, primary_key=True)
+    abonnement_id = db.Column(db.Integer, db.ForeignKey("abonnement.id"), nullable=False)
+    bedrag = db.Column(db.Numeric(10, 2), nullable=False)
+    status = db.Column(db.String(32), nullable=False, default="open")
+    betaald_op = db.Column(db.DateTime)
+
+    # backref naar Abonnement
+    abonnement = db.relationship("Abonnement", back_populates="betalingen")

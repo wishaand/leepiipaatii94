@@ -3,63 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{"title" }}</title>
+  <title>{{ title or "EuroVault" }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div class="layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="brand">
-        <span class="brand-name">EuroVault</span>
-      </div>
+  <nav class="main-nav">
+    <div class="brand"><a href="{{ url_for('main.index') }}">EuroVault</a></div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('main.index') }}">Home</a></li>
+      <li><a href="{{ url_for('main.upload') }}">Upload</a></li>
+      <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+      <li><a href="{{ url_for('main.about_me') }}">Over Mij</a></li>
+    </ul>
+    <div class="nav-status">
+      {% if current_user.is_authenticated %}
+        <span class="status-text">Ingelogd als <strong>{{ current_user.voornaam or current_user.email }}</strong></span>
+        <a class="nav-btn logout-btn" href="{{ url_for('main.logout') }}">Uitloggen</a>
+      {% else %}
+        <a class="nav-btn login-btn" href="{{ url_for('main.login') }}">Log in</a>
+        <a class="nav-btn register-btn" href="{{ url_for('main.registreer') }}">Registreren</a>
+      {% endif %}
+    </div>
+  </nav>
 
-      <nav class="nav">
-        <a class="nav-item" href="{{ url_for('main.index') }}">
-          <span class="nav-ico">🏠</span><span>Home</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('upload.index') }}">
-          <span class="nav-ico">📤</span><span>Upload Bestand</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('upload.downloads') }}">
-          <span class="nav-ico">📥</span><span>Download Bestanden</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('main.search') }}">
-          <span class="nav-ico">🔎</span><span>Zoeken</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('main.about_me') }}">
-          <span class="nav-ico">👤</span><span>Over Mij</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('main.contact') }}">
-          <span class="nav-ico">📧</span><span>Contact</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('main.favorites') }}">
-          <span class="nav-ico">⭐</span><span>Favorieten</span>
-        </a>
-      </nav>
-    </aside>
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, msg in messages %}
+            <div class="flash-message {{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
-    <!-- Main -->
-    <main class="content">
-      <header class="content-head">
-        <h2>{% block header %}{% endblock %}</h2>
-      </header>
-
-      <!-- Flash messages -->
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <div class="flash-messages">
-            {% for message in messages %}
-              <div class="flash-message">{{ message }}</div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
-
-      <section class="main-content">
-        {% block content %}{% endblock %}
-      </section>
-    </main>
-  </div>
+    {% block content %}{% endblock %}
+  </main>
 </body>
 </html>
