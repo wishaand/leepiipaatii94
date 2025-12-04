@@ -24,6 +24,7 @@ with app.app_context():
     db.session.commit()
     
     abonnement = Abonnement.query.first()
+    #abonnement.get_all_betalingen()
     print(f"📋 {abonnement.naam}:")
     for betaling in abonnement.betalingen:
         print(f"  - €{betaling.bedrag} ({betaling.status})")
