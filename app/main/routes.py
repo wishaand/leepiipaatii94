@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, current_ap
 from flask_login import login_user, logout_user, current_user, login_required
 from . import bp
 from app import db
-from app.models import User, Abonnement  # voeg Abonnement toe
+from app.models import User, Betaling, Abonnement
 from app.forms import LoginForm, RegisterForm, ContactForm
 from sqlalchemy.exc import OperationalError
 
@@ -21,9 +21,9 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
-            login_user(user)
-            return redirect(url_for('main.index'))
-        flash('Ongeldige inloggegevens')
+            login_user(user, remember=form.remember_me.data)
+            return redirect(url_for('main.betalingen_overzicht'))
+        flash('Ongeldige gebruikersnaam of wachtwoord', 'error')
     return render_template('login.html', form=form)
 
 @bp.route('/registreer', methods=['GET', 'POST'])
@@ -123,10 +123,9 @@ def contact():
         return redirect(url_for('main.contact'))
     return render_template('contact.html', form=form)
 
-@bp.route("/abonnement/<int:abonnement_id>/betalingen")
-def abonnement_betalingen(abonnement_id):
-    """Toon betalingsoverzicht voor één abonnement."""
-    abonnement = Abonnement.query.get_or_404(abonnement_id)
-    # relatie geeft je gratis abonnement.betalingen (get_all_betaling)
-    betalingen = abonnement.betalingen
-    return render_template("betalingen.html", abonnement=abonnement, betalingen=betalingen)
+
+@bp.route("/betalingen")
+def betalingen_overzicht():
+    """Toon alle betalingen (optioneel met bijbehorend abonnement)."""
+    betalingen = Betaling.query.order_by(Betaling.id.desc()).all()
+    return render_template("betalingen_overzicht.html", betalingen=betalingen)

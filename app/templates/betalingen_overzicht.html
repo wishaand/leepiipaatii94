@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="upload-container">
+  <h1>Betalingen{% if abonnement %} – {{ abonnement.naam }}{% endif %}</h1>
+  {% if betalingen %}
+    <div class="files-section">
+      <h3>Overzicht</h3>
+      <div class="files-list">
+        {% for b in betalingen %}
+          <div class="file-item">
+            <span class="file-name">
+              €{{ "%.2f"|format(b.bedrag) }} — {{ b.status }}{% if b.betaald_op %} ({{ b.betaald_op.strftime("%Y-%m-%d") }}){% endif %}
+              {% if b.abonnement %}
+                — {{ b.abonnement.naam }}
+              {% endif %}
+            </span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <p>Geen betalingen gevonden.</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+DROP TABLE IF EXISTS `betaling`;
+CREATE TABLE `betaling` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `abonnement_id` INT NOT NULL,
+  `bedrag` DECIMAL(10,2) NOT NULL,
+  `status` VARCHAR(32) NOT NULL DEFAULT 'open',
+  `betaald_op` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_betaling_abonnement` FOREIGN KEY (`abonnement_id`) REFERENCES `abonnement`(`abonnement_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+from app import db
+from app.models import Abonnement, Betaling
+
+# maak test-abonnement als hij nog niet bestaat
+ab = Abonnement.query.first()
+if not ab:
+    ab = Abonnement(naam="Test Abonnement", prijs=9.99, looptijd_maanden=1, actief=True)
+    db.session.add(ab)
+    db.session.commit()
+
+# maak test-betaling
+b = Betaling(
+    abonnement_id=ab.abonnement_id,  # of ab.id als je PK 'id' gebruikt
+    bedrag=9.99,
+    status="betaald"
+)
+db.session.add(b)
+db.session.commit()
+
+print("Test betaling aangemaakt:", b.id)
+
+
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+# In de terminal (vanuit projectroot met venv actief):
+python3 << 'PY'
+from app import create_app, db
+from app.models import Abonnement, Betaling
+
+app = create_app()
+with app.app_context():
+    # Maak test-abonnement
+    ab = Abonnement(
+        naam="Premium Plan",
+        prijs=29.99,
+        looptijd_maanden=12,
+        actief=True
+    )
+    db.session.add(ab)
+    db.session.commit()
+    print(f"✅ Abonnement aangemaakt: {ab.naam} (ID: {ab.abonnement_id})")
+
+    # Maak test-betaling gekoppeld aan abonnement
+    b = Betaling(
+        abonnement_id=ab.abonnement_id,
+        bedrag=29.99,
+        status="betaald"
+    )
+    db.session.add(b)
+    db.session.commit()
+    print(f"✅ Betaling aangemaakt: €{b.bedrag} (ID: {b.id})")
+
+    # Test de relatie: haal via abonnement.betalingen
+    abonnement = Abonnement.query.first()
+    print(f"\n📋 Abonnement: {abonnement.naam}")
+    print(f"   Betalingen voor dit abonnement:")
+    for betaling in abonnement.betalingen:
+        print(f"   - €{betaling.bedrag} ({betaling.status})")
+PY
+
+
+
+{% block head %}
+{% endblock %}

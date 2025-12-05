@@ -19,6 +19,9 @@
                 <div class="form-errors">{{ form.password.errors[0] }}</div>
             {% endif %}
         </div>
+        <div class="form-group">
+            {{ form.remember_me() }} {{ form.remember_me.label }}
+        </div>
         <button type="submit">Inloggen</button>
     </form>
     <div class="auth-links">
@@ -26,3 +29,46 @@
     </div>
 </div>
 {% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+# In de terminal (vanuit projectroot met venv actief):
+python3 << 'PY'
+from app import create_app, db
+from app.models import Abonnement, Betaling
+
+app = create_app()
+with app.app_context():
+    # Maak test-abonnement
+    ab = Abonnement(
+        naam="Premium Plan",
+        prijs=29.99,
+        looptijd_maanden=12,
+        actief=True
+    )
+    db.session.add(ab)
+    db.session.commit()
+    print(f"✅ Abonnement aangemaakt: {ab.naam} (ID: {ab.abonnement_id})")
+
+    # Maak test-betaling gekoppeld aan abonnement
+    b = Betaling(
+        abonnement_id=ab.abonnement_id,
+        bedrag=29.99,
+        status="betaald"
+    )
+    db.session.add(b)
+    db.session.commit()
+    print(f"✅ Betaling aangemaakt: €{b.bedrag} (ID: {b.id})")
+
+    # Test de relatie: haal via abonnement.betalingen
+    abonnement = Abonnement.query.first()
+    print(f"\n📋 Abonnement: {abonnement.naam}")
+    print(f"   Betalingen voor dit abonnement:")
+    for betaling in abonnement.betalingen:
+        print(f"   - €{betaling.bedrag} ({betaling.status})")
+PY
+
