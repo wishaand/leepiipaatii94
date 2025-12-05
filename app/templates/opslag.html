@@ -33,24 +33,6 @@
     </div>
   </div>
 
-  <div class="storage-details">
-    <h3>📁 Opslag per Type</h3>
-    <div class="storage-types">
-      {% for type in storage_by_type %}
-      <div class="storage-type-item">
-        <div class="type-icon">{{ type.icon }}</div>
-        <div class="type-info">
-          <span class="type-name">{{ type.name }}</span>
-          <span class="type-size">{{ type.size }} GB</span>
-        </div>
-        <div class="type-bar">
-          <div class="type-bar-fill" style="width: {{ type.percentage }}%"></div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-
   <div class="storage-files">
     <h3>📄 Grootste Bestanden</h3>
     <div class="files-list">
