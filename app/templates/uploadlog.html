@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Upload Log</h1>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <div class="upload-log-header">
+    <h2>📋 Upload Geschiedenis</h2>
+    <p>Overzicht van alle uploads met tijden en datums</p>
+  </div>
+
+  <div class="upload-log-section">
+    <div class="log-stats">
+      <div class="stat-card">
+        <span class="stat-icon">📤</span>
+        <div class="stat-content">
+          <span class="stat-label">Totaal Uploads</span>
+          <span class="stat-number">{{ total_uploads|default(0) }}</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📅</span>
+        <div class="stat-content">
+          <span class="stat-label">Vandaag</span>
+          <span class="stat-number">{{ today_uploads|default(0) }}</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📊</span>
+        <div class="stat-content">
+          <span class="stat-label">Deze Week</span>
+          <span class="stat-number">{{ week_uploads|default(0) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="log-table-container">
+      <table class="upload-log-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>📄 Bestandsnaam</th>
+            <th>📅 Datum</th>
+            <th>🕐 Tijd</th>
+            <th>📏 Grootte</th>
+            <th>✅ Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if uploads and uploads|length > 0 %}
+            {% for upload in uploads %}
+            <tr>
+              <td class="row-number">{{ loop.index }}</td>
+              <td class="file-name-cell">
+                <span class="file-icon">{{ upload.icon|default('📄') }}</span>
+                <span class="file-name-text">{{ upload.filename|default('bestand.pdf') }}</span>
+              </td>
+              <td class="date-cell">{{ upload.date|default('15 Jan 2025') }}</td>
+              <td class="time-cell">{{ upload.time|default('14:30:25') }}</td>
+              <td class="size-cell">{{ upload.size|default('2.4 MB') }}</td>
+              <td class="status-cell">
+                <span class="status-badge status-success">{{ upload.status|default('Voltooid') }}</span>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="6" class="empty-state">
+                <div class="empty-message">
+                  <span class="empty-icon">📭</span>
+                  <p>Nog geen uploads geregistreerd</p>
+                  <p class="empty-subtitle">Uploads worden hier automatisch getoond wanneer je bestanden uploadt.</p>
+                </div>
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if uploads and uploads|length > 0 %}
+    <div class="log-pagination">
+      <div class="pagination-info">
+        <span>Toont 1-{{ uploads|length }} van {{ total_uploads|default(uploads|length) }} uploads</span>
+      </div>
+      <div class="pagination-controls">
+        <button class="pagination-btn" disabled>← Vorige</button>
+        <span class="pagination-page">Pagina 1</span>
+        <button class="pagination-btn">Volgende →</button>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

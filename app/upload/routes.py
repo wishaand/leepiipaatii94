@@ -63,3 +63,19 @@ def download_file(filename):
 
     flash("Bestand niet gevonden")
     return redirect(url_for("upload.index"))
+
+
+@bp.route("/uploadlog")
+def uploadlog():
+    """Upload log pagina - toont alle upload tijden en datums"""
+    # Placeholder data - kan later worden vervangen met echte data
+    uploads = []
+    total_uploads = 0
+    today_uploads = 0
+    week_uploads = 0
+    
+    return render_template("uploadlog.html",
+                         uploads=uploads,
+                         total_uploads=total_uploads,
+                         today_uploads=today_uploads,
+                         week_uploads=week_uploads)
