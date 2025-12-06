@@ -25,29 +25,4 @@
       </div>
       
       <div class="storage-bar-container">
-        <div class="storage-bar">
-          <div class="storage-bar-fill" style="width: {{ storage_percentage }}%"></div>
-        </div>
-        <p class="storage-percentage">{{ storage_percentage }}% gebruikt</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="storage-files">
-    <h3>📄 Grootste Bestanden</h3>
-    <div class="files-list">
-      {% for file in largest_files %}
-      <div class="file-item">
-        <span class="file-icon">{{ file.icon }}</span>
-        <div class="file-info">
-          <span class="file-name">{{ file.name }}</span>
-          <span class="file-date">{{ file.date }}</span>
-        </div>
-        <span class="file-size">{{ file.size }}</span>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</div>
-{% endblock %}
-
+        <div class="storage-bar"> 

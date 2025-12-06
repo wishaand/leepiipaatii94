@@ -116,30 +116,146 @@ def favorites():
 
 @bp.route("/opslag")
 def opslag():
-    """Opslag pagina - toont opslag informatie (nu met voorbeeld data, later Nextcloud)"""
-    # Voorbeeld opslag data
-    storage_total = 100  # GB
-    storage_used = 42.5  # GB
-    storage_available = storage_total - storage_used
-    storage_percentage = round((storage_used / storage_total) * 100, 1)
+    """Opslag pagina - toont opslag informatie van Nextcloud"""
+    from app.services.nextcloud_client import NextcloudClient
+    import os
+    from datetime import datetime
     
-    # Opslag per bestandstype (voorbeeld)
-    storage_by_type = [
-        {"name": "Documenten", "size": 15.2, "icon": "📄", "percentage": 35.8},
-        {"name": "Afbeeldingen", "size": 18.5, "icon": "🖼️", "percentage": 43.5},
-        {"name": "Video's", "size": 5.8, "icon": "🎥", "percentage": 13.6},
-        {"name": "Audio", "size": 2.1, "icon": "🎵", "percentage": 4.9},
-        {"name": "Overig", "size": 0.9, "icon": "📦", "percentage": 2.1}
-    ]
+    # Default waarden voor als Nextcloud niet bereikbaar is
+    storage_total = 0
+    storage_used = 0
+    storage_available = 0
+    storage_percentage = 0
+    storage_by_type = []
+    largest_files = []
     
-    # Grootste bestanden (voorbeeld)
-    largest_files = [
-        {"name": "project_presentatie.pdf", "size": "2.4 GB", "date": "15 Jan 2025", "icon": "📄"},
-        {"name": "team_foto_2024.jpg", "size": "1.8 GB", "date": "10 Jan 2025", "icon": "🖼️"},
-        {"name": "video_demo.mp4", "size": "1.2 GB", "date": "8 Jan 2025", "icon": "🎥"},
-        {"name": "jaarverslag_2024.pdf", "size": "850 MB", "date": "5 Jan 2025", "icon": "📄"},
-        {"name": "muziek_collectie.zip", "size": "650 MB", "date": "3 Jan 2025", "icon": "🎵"}
-    ]
+    try:
+        # Maak Nextcloud client aan
+        server_url = current_app.config.get("NEXTCLOUD_SERVER_URL")
+        username = current_app.config.get("NEXTCLOUD_USERNAME")
+        password = current_app.config.get("NEXTCLOUD_PASSWORD")
+        folder = current_app.config.get("NEXTCLOUD_FOLDER")
+        
+        if not all([server_url, username, password, folder]):
+            flash("Nextcloud configuratie ontbreekt", "error")
+            return render_template("opslag.html",
+                                 storage_total=storage_total,
+                                 storage_used=storage_used,
+                                 storage_available=storage_available,
+                                 storage_percentage=storage_percentage,
+                                 storage_by_type=storage_by_type,
+                                 largest_files=largest_files)
+        
+        nc = NextcloudClient(server_url, username, password, folder)
+        
+        # Haal quota informatie op
+        quota = nc.get_storage_quota()
+        if quota:
+            # Converteer bytes naar GB
+            storage_used = round(quota["used"] / (1024**3), 2) if quota["used"] else 0
+            if quota["total"]:
+                storage_total = round(quota["total"] / (1024**3), 2)
+                storage_available = round((quota["total"] - quota["used"]) / (1024**3), 2) if quota["used"] else storage_total
+            elif quota["available"] and quota["available"] >= 0:
+                storage_available = round(quota["available"] / (1024**3), 2)
+                storage_total = storage_used + storage_available
+            
+            if storage_total > 0:
+                storage_percentage = round((storage_used / storage_total) * 100, 1)
+        
+        # Haal bestanden op met details
+        files = nc.get_files_with_details()
+        
+        # Groepeer bestanden per type
+        type_sizes = {
+            "Documenten": 0,
+            "Afbeeldingen": 0,
+            "Video's": 0,
+            "Audio": 0,
+            "Overig": 0
+        }
+        
+        type_icons = {
+            "Documenten": "📄",
+            "Afbeeldingen": "🖼️",
+            "Video's": "🎥",
+            "Audio": "🎵",
+            "Overig": "📦"
+        }
+        
+        document_exts = {'.pdf', '.doc', '.docx', '.txt', '.rtf', '.odt', '.xls', '.xlsx', '.csv', '.ppt', '.pptx'}
+        image_exts = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp'}
+        video_exts = {'.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm'}
+        audio_exts = {'.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a'}
+        
+        for file_info in files:
+            ext = os.path.splitext(file_info["name"])[1].lower()
+            size_gb = file_info["size"] / (1024**3)
+            
+            if ext in document_exts:
+                type_sizes["Documenten"] += size_gb
+            elif ext in image_exts:
+                type_sizes["Afbeeldingen"] += size_gb
+            elif ext in video_exts:
+                type_sizes["Video's"] += size_gb
+            elif ext in audio_exts:
+                type_sizes["Audio"] += size_gb
+            else:
+                type_sizes["Overig"] += size_gb
+        
+        # Maak storage_by_type lijst
+        total_type_size = sum(type_sizes.values())
+        storage_by_type = []
+        for type_name, size in type_sizes.items():
+            if size > 0:
+                percentage = round((size / total_type_size) * 100, 1) if total_type_size > 0 else 0
+                storage_by_type.append({
+                    "name": type_name,
+                    "size": round(size, 2),
+                    "icon": type_icons[type_name],
+                    "percentage": percentage
+                })
+        
+        # Sorteer bestanden op grootte en neem de 5 grootste
+        files_sorted = sorted(files, key=lambda x: x["size"], reverse=True)[:5]
+        largest_files = []
+        
+        for file_info in files_sorted:
+            size_bytes = file_info["size"]
+            if size_bytes >= 1024**3:  # GB
+                size_str = f"{round(size_bytes / (1024**3), 2)} GB"
+            elif size_bytes >= 1024**2:  # MB
+                size_str = f"{round(size_bytes / (1024**2), 2)} MB"
+            elif size_bytes >= 1024:  # KB
+                size_str = f"{round(size_bytes / 1024, 2)} KB"
+            else:
+                size_str = f"{size_bytes} B"
+            
+            # Format datum
+            date_str = "Onbekend"
+            if file_info["date"]:
+                try:
+                    # Parse RFC 1123 format (bijv. "Wed, 15 Jan 2025 10:30:00 GMT")
+                    dt = datetime.strptime(file_info["date"], "%a, %d %b %Y %H:%M:%S %Z")
+                    date_str = dt.strftime("%d %b %Y")
+                except:
+                    try:
+                        # Probeer alternatief formaat
+                        dt = datetime.fromisoformat(file_info["date"].replace('Z', '+00:00'))
+                        date_str = dt.strftime("%d %b %Y")
+                    except:
+                        date_str = file_info["date"][:10] if len(file_info["date"]) >= 10 else "Onbekend"
+            
+            largest_files.append({
+                "name": file_info["name"],
+                "size": size_str,
+                "date": date_str,
+                "icon": nc.get_file_icon(file_info["name"])
+            })
+        
+    except Exception as e:
+        current_app.logger.error(f"Fout bij ophalen opslag informatie: {e}")
+        flash(f"Fout bij het ophalen van opslag informatie: {str(e)}", "error")
     
     return render_template("opslag.html",
                          storage_total=storage_total,
