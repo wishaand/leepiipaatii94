@@ -1,0 +1,29 @@
+name: Deploy app using Docker
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Build Docker image
+      run: docker build -t myapp .
+
+    - name: Deploy to server
+      env:
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+      run: |
+        ssh "$SERVER_USER@$SERVER_IP" "
+          cd /path/to/app &&
+          git pull &&
+          docker-compose down &&
+          docker-compose build &&
+          docker-compose up -d
+        "
