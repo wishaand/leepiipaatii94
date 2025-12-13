@@ -27,3 +27,19 @@ def load_user(user_id):
         return User.query.get(int(user_id))
     except Exception:
         return None
+
+class UploadLog(db.Model):
+    __tablename__ = "upload_log"
+    
+    upload_id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(255), nullable=False)
+    file_size = db.Column(db.Integer, nullable=True)
+    upload_datetime = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+    status = db.Column(db.String(20), default="Voltooid")
+    gebruiker_id = db.Column(db.Integer, db.ForeignKey('gebruiker.gebruiker_id'), nullable=True)
+    
+    # Relatie met User (optioneel)
+    gebruiker = db.relationship('User', backref='uploads')
+    
+    def __repr__(self):
+        return f'<UploadLog {self.filename} - {self.upload_datetime}>'
