@@ -91,4 +91,58 @@ class UploadLogService:
                 "today_uploads": 0,
                 "week_uploads": 0
             }
-   
+
+    @staticmethod
+    def format_uploads_for_template(uploads):
+        """
+        Formatteer uploads voor gebruik in templates.
+        
+        Args:
+            uploads: List van UploadLog objecten
+        
+        Returns:
+            List van dicts met geformatteerde data
+        """
+        formatted = []
+        
+        # Icoon mapping
+        icon_map = {
+            '.pdf': '📄', '.doc': '📄', '.docx': '📄', '.txt': '📄', '.rtf': '📄',
+            '.jpg': '🖼️', '.jpeg': '🖼️', '.png': '🖼️', '.gif': '🖼️', '.bmp': '🖼️', '.svg': '🖼️',
+            '.mp4': '🎥', '.avi': '🎥', '.mov': '🎥', '.mkv': '🎥', '.wmv': '🎥',
+            '.mp3': '🎵', '.wav': '🎵', '.flac': '🎵', '.aac': '🎵', '.ogg': '🎵',
+            '.zip': '📦', '.rar': '📦', '.7z': '📦', '.tar': '📦', '.gz': '📦',
+            '.xls': '📊', '.xlsx': '📊', '.csv': '📊',
+            '.ppt': '📊', '.pptx': '📊'
+        }
+        
+        for upload in uploads:
+            # Format datum en tijd
+            date_str = upload.upload_datetime.strftime("%d %b %Y")
+            time_str = upload.upload_datetime.strftime("%H:%M:%S")
+            
+            # Format grootte
+            size_bytes = upload.file_size or 0
+            if size_bytes >= 1024**3:  # GB
+                size_str = f"{round(size_bytes / (1024**3), 2)} GB"
+            elif size_bytes >= 1024**2:  # MB
+                size_str = f"{round(size_bytes / (1024**2), 2)} MB"
+            elif size_bytes >= 1024:  # KB
+                size_str = f"{round(size_bytes / 1024, 2)} KB"
+            else:
+                size_str = f"{size_bytes} B"
+            
+            # Bepaal icoon
+            ext = os.path.splitext(upload.filename)[1].lower()
+            icon = icon_map.get(ext, '📄')
+            
+            formatted.append({
+                "filename": upload.filename,
+                "date": date_str,
+                "time": time_str,
+                "size": size_str,
+                "status": upload.status,
+                "icon": icon
+            })
+        
+        return formatted
