@@ -1,31 +1,52 @@
 {% extends "base.html" %}
+{# Hergebruikt base.html structuur #}
 
 {% block content %}
 <div class="auth-container">
+    
     <h1>Inloggen</h1>
+    
     <form class="auth-form" method="post" action="{{ url_for('main.login') }}">
+        {# Formulier verstuurt data via POST naar /login #}
+        
         {{ form.hidden_tag() }}
+        {# CSRF beveiliging: alleen echte formulieren van deze site werken #}
+        
         <div class="form-group">
             {{ form.email.label }}
+            {# Label "Email" #}
             {{ form.email(class="form-control") }}
+            {# Email invoerveld #}
             {% if form.email.errors %}
                 <div class="form-errors">{{ form.email.errors[0] }}</div>
+                {# Foutmelding: email is verplicht of ongeldig #}
             {% endif %}
         </div>
+        
         <div class="form-group">
             {{ form.password.label }}
+            {# Label "Wachtwoord" #}
             {{ form.password(class="form-control") }}
+            {# Wachtwoord invoerveld (verborgen tekst) #}
             {% if form.password.errors %}
                 <div class="form-errors">{{ form.password.errors[0] }}</div>
+                {# Foutmelding: wachtwoord is verplicht #}
             {% endif %}
         </div>
+        
         <div class="form-group">
-            {{ form.remember_me() }} {{ form.remember_me.label }}
+            {{ form.remember_me() }}
+            {{ form.remember_me.label }}
+            {# Checkbox "Onthoud mij" om ingelogd te blijven #}
         </div>
+        
         <button type="submit">Inloggen</button>
+        {# Verstuur knop #}
     </form>
+    
     <div class="auth-links">
-        <p>Nog geen account? <a href="{{ url_for('main.registreer') }}">Maak een account aan</a></p>
+        <p>Nog geen account? <a href="{{ url_for('main.registreer') }}">Registreer hier</a></p>
+        {# Link naar registratiepagina #}
     </div>
 </div>
 {% endblock %}

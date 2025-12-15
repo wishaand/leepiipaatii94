@@ -1,70 +1,95 @@
 {% extends "base.html" %}
+{# Hergebruikt base.html structuur #}
 
 {% block header %}
 <h1>Contact</h1>
+{# Titel in header sectie #}
 {% endblock %}
 
 {% block content %}
 <div class="auth-container">
+  {# Container voor formulier styling #}
 
   {% with messages = get_flashed_messages() %}
+    {# Haalt berichten op van Flask flash() #}
     {% if messages %}
       {% for message in messages %}
         <div class="flash-message">{{ message }}</div>
+        {# Toont succesbericht of foutmelding #}
       {% endfor %}
     {% endif %}
   {% endwith %}
 
   <form class="auth-form" method="post" action="{{ url_for('main.contact') }}">
+    {# Formulier verstuurt data via POST naar /contact #}
+    
     {{ form.hidden_tag() }}
+    {# CSRF beveiliging: alleen echte formulieren van deze site werken door een token #}
 
     <div class="form-group">
       {{ form.naam.label }}
+      {# Label "Naam" #}
       {{ form.naam(class="form-control") }}
+      {# Naam invoerveld #}
       {% if form.naam.errors %}
         <div class="form-errors">{{ form.naam.errors[0] }}</div>
+        {# Foutmelding: naam is verplicht #}
       {% endif %}
     </div>
 
     <div class="form-group">
       {{ form.email.label }}
+      {# Label "Email" #}
       {{ form.email(class="form-control") }}
+      {# Email invoerveld #}
       {% if form.email.errors %}
         <div class="form-errors">{{ form.email.errors[0] }}</div>
+        {# Foutmelding: ongeldig emailadres #}
       {% endif %}
     </div>
 
     <div class="form-group">
       {{ form.telefoon.label }}
+      {# Label "Telefoon" (optioneel) #}
       {{ form.telefoon(class="form-control") }}
+      {# Telefoon invoerveld #}
       {% if form.telefoon.errors %}
         <div class="form-errors">{{ form.telefoon.errors[0] }}</div>
+        {# Foutmelding telefoon #}
       {% endif %}
     </div>
 
     <div class="form-group">
       {{ form.onderwerp.label }}
+      {# Label "Onderwerp" #}
       {{ form.onderwerp(class="form-control") }}
+      {# Onderwerp invoerveld #}
       {% if form.onderwerp.errors %}
         <div class="form-errors">{{ form.onderwerp.errors[0] }}</div>
+        {# Foutmelding onderwerp #}
       {% endif %}
     </div>
 
     <div class="form-group">
       {{ form.bericht.label }}
+      {# Label "Bericht" #}
       {{ form.bericht(class="form-control", rows=6) }}
+      {# Bericht tekstvak (6 regels hoog) #}
       {% if form.bericht.errors %}
         <div class="form-errors">{{ form.bericht.errors[0] }}</div>
+        {# Foutmelding bericht #}
       {% endif %}
     </div>
 
     <div class="form-actions">
       <button type="submit" class="btn-submit">Verstuur</button>
+      {# Verstuur knop #}
     </div>
   </form>
 
   <div class="auth-links">
     <p>Of <a href="{{ url_for('main.index') }}">ga terug</a></p>
+    {# Link naar homepage #}
   </div>
 </div>
 {% endblock %}

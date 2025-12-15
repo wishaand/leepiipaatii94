@@ -1,49 +1,82 @@
 {% extends "base.html" %}
+{# Hergebruikt de structuur van base.html #}
 
 {% block content %}
 <div class="auth-container">
+    {# Container voor styling van het registratieformulier #}
+    
     <h1>Account aanmaken</h1>
+    
     <form class="auth-form" method="post" action="{{ url_for('main.registreer') }}">
+        {# method="post": formulierdata wordt veilig verstuurd via POST request #}
+        {# action="{{ url_for('main.registreer') }}": stuurt data naar de /registreer route #}
+        
         {{ form.hidden_tag() }}
+        {# CSRF beveiliging tegen nepformulieren #}
+        
         <div class="form-group">
             {{ form.voornaam.label }}
+            {# Label "Voornaam" boven het invoerveld #}
             {{ form.voornaam(class="form-control") }}
+            {# Voornaam invoerveld #}
             {% if form.voornaam.errors %}
                 <div class="form-errors">{{ form.voornaam.errors[0] }}</div>
+                {# Toont eerste validatiefout voor voornaam ("Dit veld is verplicht") #}
             {% endif %}
         </div>
+        
         <div class="form-group">
             {{ form.achternaam.label }}
+            {# Label "Achternaam" #}
             {{ form.achternaam(class="form-control") }}
+            {# Invoerveld voor achternaam #}
             {% if form.achternaam.errors %}
                 <div class="form-errors">{{ form.achternaam.errors[0] }}</div>
+                {# Validatiefout voor achternaam #}
             {% endif %}
         </div>
+        
         <div class="form-group">
             {{ form.email.label }}
+            {# Label "Email" #}
             {{ form.email(class="form-control") }}
+            {# Invoerveld voor email #}
             {% if form.email.errors %}
                 <div class="form-errors">{{ form.email.errors[0] }}</div>
+                {# Validatiefout voor email (bijv. "Ongeldig emailadres" of "Email al in gebruik") #}
             {% endif %}
         </div>
+        
         <div class="form-group">
             {{ form.password.label }}
+            {# Label "Wachtwoord" #}
             {{ form.password(class="form-control") }}
+            {# Wachtwoordveld (verborgen tekst) #}
             {% if form.password.errors %}
                 <div class="form-errors">{{ form.password.errors[0] }}</div>
+                {# Validatiefout voor wachtwoord ( "Minimaal 6 tekens") #}
             {% endif %}
         </div>
+        
         <div class="form-group">
             {{ form.password2.label }}
+            {# Label "Bevestig wachtwoord" #}
             {{ form.password2(class="form-control") }}
+            {# Invoerveld voor wachtwoordbevestiging #}
             {% if form.password2.errors %}
                 <div class="form-errors">{{ form.password2.errors[0] }}</div>
+                {# Validatiefout voor wachtwoordbevestiging (bijv. "Wachtwoorden komen niet overeen") #}
             {% endif %}
         </div>
+        
         <button type="submit">Account aanmaken</button>
+        {# Submit button: verstuurt het formulier naar de server #}
     </form>
+    
     <div class="auth-links">
         <p>Al een account? <a href="{{ url_for('main.login') }}">Log hier in</a></p>
+        {# url_for('main.login'): genereert de URL naar de login pagina #}
     </div>
 </div>
 {% endblock %}
+
