@@ -60,4 +60,4 @@ def test_retrieve_user(app):
         assert retrieved.voornaam == "Maria"
         assert retrieved.check_password("password456")
 
-#pytest tests/test_database_connection.py -v  
+#pytest tests/test_database_connection.py -v    

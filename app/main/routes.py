@@ -126,6 +126,5 @@ def contact():
 
 @bp.route("/betalingen")
 def betalingen_overzicht():
-    """Toon alle betalingen (optioneel met bijbehorend abonnement)."""
-    betalingen = Betaling.query.order_by(Betaling.id.desc()).all()
+me    betalingen = Betaling.query.order_by(Betaling.id.desc()).all()
     return render_template("betalingen_overzicht.html", betalingen=betalingen)
