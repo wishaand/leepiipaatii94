@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Opslag</h1>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <div class="storage-overview">
+    <div class="storage-card">
+      <h2>📊 Opslag Overzicht</h2>
+      <div class="storage-stats">
+        <div class="stat-item">
+          <span class="stat-label">Gebruikt</span>
+          <span class="stat-value">{{ storage_used }} GB</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Beschikbaar</span>
+          <span class="stat-value">{{ storage_available }} GB</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Totaal</span>
+          <span class="stat-value">{{ storage_total }} GB</span>
+        </div>
+      </div>
+      
+      <div class="storage-bar-container">
+        <div class="storage-bar"> 

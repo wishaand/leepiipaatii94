@@ -2,6 +2,7 @@
 # voert alle andere functies uit om de functie uploaden/downloaden uit te kunnen voeren
 
 from werkzeug.utils import secure_filename
+from app.services.upload_log_service import UploadLogService
 
 
 class FileUploadService:
@@ -21,37 +22,47 @@ class FileUploadService:
         """Download een bestand van Nextcloud."""
         return self.nc.download(filename)
 
-    def upload_file(self, file):
-        """Upload een bestand naar Nextcloud."""
-        # Check of er een bestand is
+    def upload_file(self, file, gebruiker_id=None):
         if not file or not file.filename:
             return False, "Geen bestand geselecteerd"
-        
-        # Maak bestandsnaam veilig
+
         filename = secure_filename(file.filename)
         if not filename:
             return False, "Ongeldige bestandsnaam"
 
-        # Controleer bestandstype
         if not self.validator.is_allowed(filename):
             return False, "Bestandstype niet toegestaan"
 
-        # Controleer grootte
         if not self.validator.is_not_too_large(file):
             return False, "Bestand is te groot"
 
-        # Sla tijdelijk op
         temp_path = self.storage.save_temp(file, filename)
 
         try:
-            # Lees bestand
             content = self.storage.load_bytes(temp_path)
-            # Upload naar Nextcloud
+            file_size = len(content)
+
             ok = self.nc.upload(filename, content)
+
             if ok:
+                # ✅ LOG SUCCES
+                UploadLogService.save_upload_log(
+                    filename=filename,
+                    file_size=file_size,
+                    status="Voltooid",
+                    gebruiker_id=gebruiker_id
+                )
                 return True, f"{filename} geüpload"
-            return False, "Upload mislukt"
+
+            else:
+                # ❌ LOG FOUT
+                UploadLogService.save_upload_log(
+                    filename=filename,
+                    file_size=file_size,
+                    status="Mislukt",
+                    gebruiker_id=gebruiker_id
+                )
+                return False, "Upload mislukt"
 
         finally:
-            # Ruim altijd op
             self.storage.delete(temp_path)
