@@ -646,7 +646,6 @@ body {
   padding: 12px 15px;
   border-radius: 10px;
   font-size: 0.95rem;
-  min-width: 320px;
 }
   .favorite-info h4 {
     margin: 0;
@@ -1131,7 +1130,7 @@ login pagina
 
 .stat-card:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(0, 180, 216, 0.3);
+  border-color: rgba(0, 180, 216, 0.4);
   transform: translateY(-2px);
 }
 
@@ -1374,4 +1373,232 @@ login pagina
     gap: 15px;
     text-align: center;
   }
+}
+
+/* === HERO SECTION === */
+.hero {
+  margin-top: 70px;
+  padding: 100px 40px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(0, 180, 216, 0.1));
+  border-bottom: 1px solid rgba(0, 180, 216, 0.2);
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #00b4d8, #007aff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-content p {
+  font-size: 1.3rem;
+  color: #b0b0b0;
+  margin-bottom: 40px;
+}
+
+.hero-content a {
+  display: inline-block;
+  margin: 0 10px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #007aff, #00b4d8);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 180, 216, 0.5);
+}
+
+.btn-secondary {
+  background: rgba(0, 180, 216, 0.2);
+  border: 1px solid rgba(0, 180, 216, 0.4);
+  color: #00b4d8;
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 180, 216, 0.3);
+  border-color: rgba(0, 180, 216, 0.6);
+}
+
+/* === SECTIONS === */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #ffffff;
+}
+
+.section p {
+  font-size: 1.1rem;
+  color: #b0b0b0;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* === FEATURES === */
+.features {
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(0, 180, 216, 0.1);
+  border-bottom: 1px solid rgba(0, 180, 216, 0.1);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.feature-card {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 180, 216, 0.4);
+  transform: translateY(-5px);
+}
+
+.feature-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #00b4d8;
+}
+
+.feature-card p {
+  color: #b0b0b0;
+  font-size: 0.95rem;
+}
+
+/* === PLANS === */
+.plans {
+  background: rgba(0, 122, 255, 0.05);
+  border-top: 1px solid rgba(0, 180, 216, 0.1);
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.plan-card {
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  border-radius: 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(0, 180, 216, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 122, 255, 0.2);
+}
+
+.plan-card.featured {
+  border: 2px solid rgba(0, 180, 216, 0.5);
+  background: rgba(0, 180, 216, 0.1);
+  transform: scale(1.05);
+}
+
+.plan-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #00b4d8;
+}
+
+.plan-card p {
+  color: #b0b0b0;
+  margin: 15px 0;
+}
+
+.plan-card .price {
+  font-size: 1.8rem;
+  color: #00b4d8;
+  font-weight: 700;
+  margin: 20px 0 !important;
+}
+
+.plan-card a {
+  display: block;
+  margin-top: 30px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 20px;
+    margin-top: 60px;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .section {
+    padding: 60px 20px;
+  }
+
+  .section h2 {
+    font-size: 1.8rem;
+  }
+
+  .plan-card.featured {
+    transform: scale(1);
+  }
+
+  .feature-grid,
+  .plan-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.8s ease-out;
 }

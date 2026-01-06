@@ -1,27 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<header class="navbar">
-  <div class="logo">EuroVault</div>
-  <nav>
-    <a href="#about">Over</a>
-    <a href="#features">Functionaliteiten</a>
-    <a href="#security">Veiligheid</a>
-    <a href="#plans">Pakketten</a>
-    <a href="{{ url_for('main.upload') }}" class="btn-nav">Upload</a>
-    <a href="{{ url_for('main.login') }}" class="btn-nav">Log in</a>
-  </nav>
-</header>
-
+<!-- Hero Section -->
 <section class="hero fade-in">
   <div class="hero-content">
     <h1>Jouw Europese Cloudoplossing</h1>
     <p>Veilig. Transparant. Volledig AVG-conform.</p>
-    <a href="{{ url_for('main.registreer') }}">Nieuw account aanmaken</a>
-    <a href="{{ url_for('main.login') }}" class="btn-primary">Aanmelden</a>
+    {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('main.registreer') }}" class="btn-primary">Nieuw account aanmaken</a>
+      <a href="{{ url_for('main.login') }}" class="btn-secondary">Aanmelden</a>
+    {% else %}
+      <a href="{{ url_for('upload.index') }}" class="btn-primary">📤 Upload Bestand</a>
+      <a href="{{ url_for('upload.downloads') }}" class="btn-secondary">📥 Downloads</a>
+    {% endif %}
   </div>
 </section>
 
+<!-- About Section -->
 <section id="about" class="section fade-in">
   <h2>Over EuroVault</h2>
   <p>EuroVault is een toegankelijke, gebruiksvriendelijke en veilige webapplicatie waarmee bedrijven hun bestanden kunnen uploaden, beheren en opslaan in de cloud. 
@@ -29,6 +24,7 @@
     EuroVault maakt gebruik van <strong>Nextcloud</strong> — open source, betrouwbaar en volledig Europees.</p>
 </section>
 
+<!-- Features Section -->
 <section id="features" class="features fade-in">
   <h2>Functionaliteiten</h2>
   <div class="feature-grid">
@@ -42,7 +38,7 @@
     </div>
     <div class="feature-card">
       <h3>🔐 Beveiliging</h3>
-      <p>Gebruik van end-to-end encryptie en veilige authenticatie via Nextcloud’s beveiligingslaag.</p>
+      <p>Gebruik van end-to-end encryptie en veilige authenticatie via Nextcloud's beveiligingslaag.</p>
     </div>
     <div class="feature-card">
       <h3>🌍 Europese servers</h3>
@@ -51,39 +47,43 @@
   </div>
 </section>
 
+<!-- Security Section -->
 <section id="security" class="section fade-in">
   <h2>Veiligheid en Transparantie</h2>
   <p>Dankzij de open source aard van Nextcloud is de code volledig controleerbaar en worden er regelmatig onafhankelijke beveiligingsaudits uitgevoerd. 
     Zo blijft jouw data beschermd en volledig eigendom van jouw organisatie — zonder afhankelijkheid van buitenlandse partijen.</p>
 </section>
 
+<!-- Plans Section -->
 <section id="plans" class="plans fade-in">
   <h2>Toekomstige Abonnementen</h2>
   <div class="plan-grid">
     <div class="plan-card">
       <h3>Small Business</h3>
       <p>5 gebruikers<br>100 GB opslag</p>
-      <p>€9,99 / maand</p>
+      <p class="price">€9,99 / maand</p>
       <a class="btn-primary" href="{{ url_for('main.registreer') }}">Kies dit plan</a>
     </div>
     <div class="plan-card featured">
       <h3>Medium Business</h3>
       <p>25 gebruikers<br>1 TB opslag</p>
-      <p>€29,99 / maand</p>
+      <p class="price">€29,99 / maand</p>
+      <a class="btn-primary" href="{{ url_for('main.registreer') }}">Kies dit plan</a>
+    </div>
+    <div class="plan-card">
+      <h3>Large Business</h3>
+      <p>100+ gebruikers<br>10 TB opslag</p>
+      <p class="price">€99,99 / maand</p>
       <a class="btn-primary" href="{{ url_for('main.registreer') }}">Kies dit plan</a>
     </div>
     <div class="plan-card">
       <h3>Enterprise</h3>
       <p>Maatwerkoplossing<br>Volledig flexibel</p>
-      <p>Prijs op aanvraag</p>
+      <p class="price">Prijs op aanvraag</p>
       <a class="btn-primary" href="{{ url_for('main.contact') }}">Plan een gesprek</a>
     </div>
   </div>
 </section>
-
-<footer>
-  <p>© 2025 EuroVault. Alle rechten voorbehouden. | Gehost binnen Europa 🇪🇺</p>
-</footer>
 {% endblock %}
 
 
