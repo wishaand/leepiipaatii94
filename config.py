@@ -1,5 +1,6 @@
 import os
 from urllib.parse import quote_plus
+
 class Config:
     # HBO-ICT API
     API_URL = os.getenv("API_URL")
@@ -10,7 +11,7 @@ class Config:
     SFTP_HOST = os.getenv("SFTP_HOST")
     SFTP_PORT = int(os.getenv("SFTP_PORT", 3322))
     SFTP_USER = os.getenv("SFTP_USER")
-    SFTP_PASSWORD = os.getenv("SFTP_PASSWORD")  # keep secret
+    SFTP_PASSWORD = os.getenv("SFTP_PASSWORD")
 
     # Database (MySQL via PyMySQL)
     DB_USER = os.getenv("DB_USER")
@@ -19,24 +20,23 @@ class Config:
     DB_PORT = os.getenv("DB_PORT", "3306")
     DB_NAME = os.getenv("DB_NAME")
 
-if not all([DB_USER, DB_NAME]):
-    raise RuntimeError(
-        "Database environment variables ontbreken. "
-        "Zet DB_USER, DB_PASSWORD, DB_HOST, DB_PORT en DB_NAME in Render."
+    if not all([DB_USER, DB_NAME]):
+        raise RuntimeError(
+            "Database environment variables ontbreken. "
+            "Zet DB_USER, DB_PASSWORD, DB_HOST, DB_PORT en DB_NAME in .env"
+        )
+
+    SQLALCHEMY_DATABASE_URI = (
+        f"mysql+pymysql://{DB_USER}:{quote_plus(DB_PASSWORD)}@"
+        f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
 
-SQLALCHEMY_DATABASE_URI = (
-    f"mysql+pymysql://{DB_USER}:{quote_plus(DB_PASSWORD)}@"
-    f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
-
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # forceer engine options zodat pool oude verbindingen test/vervangt
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
-        "pool_recycle": 280  # optioneel, in seconden
+        "pool_recycle": 280
     }
 
     # Nextcloud configuratie
@@ -47,5 +47,4 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # App security
     SECRET_KEY = os.getenv("SECRET_KEY", "change-me-replace-in-prod")
-
     WTF_CSRF_ENABLED = False

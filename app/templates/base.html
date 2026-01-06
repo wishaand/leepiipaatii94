@@ -7,56 +7,78 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div class="layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="brand">
-        <span class="brand-name">EuroVault</span>
+  <!-- Nieuwe Primary Top Navigation -->
+  <nav class="navbar-primary">
+    <!-- Logo/Brand Links -->
+    <div class="navbar-brand">
+      <a href="{{ url_for('main.index') }}" class="brand-logo">EuroVault</a>
+    </div>
+
+    <!-- Informatieve Links (Linkerkant) -->
+    <div class="navbar-info-links">
+      <a href="{{ url_for('main.about_me') }}" class="nav-link">Over</a>
+      <a href="#security" class="nav-link">Veiligheid</a>
+      <a href="#plans" class="nav-link">Pakketten</a>
+    </div>
+
+    <!-- Action Links (Rechterkant) -->
+    <div class="navbar-actions">
+      <!-- Zoekveld -->
+      <form class="navbar-search" action="{{ url_for('main.search') }}" method="get">
+        <input type="text" name="q" placeholder="Zoeken..." class="search-input" />
+        <button type="submit" class="search-btn">🔍</button>
+      </form>
+
+      <!-- Account Menu Dropdown -->
+      <div class="navbar-account">
+        {% if current_user.is_authenticated %}
+          <button class="account-btn" data-toggle="dropdown">👤 {{ current_user.voornaam }}</button>
+          <div class="dropdown-menu">
+            <a href="{{ url_for('main.favorites') }}">⭐ Favorieten</a>
+            <a href="{{ url_for('upload.uploadlog') }}">📋 Upload Log</a>
+            <a href="{{ url_for('main.contact') }}">📧 Contact</a>
+            <hr />
+            <a href="{{ url_for('main.logout') }}">🚪 Uitloggen</a>
+          </div>
+        {% else %}
+          <a href="{{ url_for('main.login') }}" class="nav-link">Inloggen</a>
+          <a href="{{ url_for('main.registreer') }}" class="btn-nav btn-primary">Registreren</a>
+        {% endif %}
       </div>
 
-      <nav class="nav">
-        <a class="nav-item" href="{{ url_for('main.index') }}">
-          <span class="nav-ico">🏠</span><span>Home</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('upload.index') }}">
-          <span class="nav-ico">📤</span><span>Upload Bestand</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('upload.downloads') }}">
-          <span class="nav-ico">📥</span><span>Download Bestanden</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('main.search') }}">
-          <span class="nav-ico">🔎</span><span>Zoeken</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('main.about_me') }}">
-          <span class="nav-ico">👤</span><span>Over Mij</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('main.contact') }}">
-          <span class="nav-ico">📧</span><span>Contact</span>
-        </a>
-        <a class="nav-item" href="{{ url_for('main.favorites') }}">
-          <span class="nav-ico">⭐</span><span>Favorieten</span>
-        </a>
-      </nav>
-    </aside>
+      <!-- Plus Menu (Dashboard-acties) -->
+      <div class="navbar-plus">
+        <button class="plus-btn" data-toggle="dropdown">➕</button>
+        <div class="dropdown-menu">
+          <a href="{{ url_for('upload.index') }}">📤 Upload Bestand</a>
+          <a href="{{ url_for('upload.downloads') }}">📥 Download Bestanden</a>
+          <a href="{{ url_for('main.betalingen_overzicht') }}">💳 Betalingen</a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-    <!-- Main -->
-    <main class="content">
-      <header class="content-head">
-        <h2>{% block header %}{% endblock %}</h2>
-      </header>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+          <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
 
-      <!-- Flash messages -->
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <div class="flash-messages">
-            {% for message in messages %}
-              <div class="flash-message">{{ message }}</div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
-
+  <!-- Main Content (geen sidebar meer!) -->
+  <main class="main-content-full">
     {% block content %}{% endblock %}
   </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2025 EuroVault. Alle rechten voorbehouden. | Gehost binnen Europa 🇪🇺</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
 </body>
 </html>
