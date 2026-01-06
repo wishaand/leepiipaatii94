@@ -87,6 +87,17 @@ class Contact(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.now())  
 
 
+class UploadLog(db.Model):
+    __tablename__ = "upload_log"
+
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(255), nullable=False)
+    file_size = db.Column(db.Integer)
+    upload_datetime = db.Column(db.DateTime, default=db.func.now())
+    status = db.Column(db.String(50), default="Voltooid")
+    gebruiker_id = db.Column(db.Integer, db.ForeignKey("gebruiker.gebruiker_id"))
+
+
 
 # Flask-Login user loader
 # Wordt gebruikt om een gebruiker uit de database te halen

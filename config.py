@@ -1,9 +1,5 @@
 import os
-from dotenv import load_dotenv
 from urllib.parse import quote_plus
-
-load_dotenv()
-
 class Config:
     # HBO-ICT API
     API_URL = os.getenv("API_URL")
@@ -23,18 +19,19 @@ class Config:
     DB_PORT = os.getenv("DB_PORT", "3306")
     DB_NAME = os.getenv("DB_NAME")
 
-    # Valideer database configuratie
-    if not all([DB_USER, DB_NAME]):
-        print("⚠️  WAARSCHUWING: Database configuratie ontbreekt!")
-        print("   Maak een .env bestand aan met: DB_USER, DB_PASSWORD, DB_HOST, DB_NAME")
-        # Fallback naar SQLite voor development als MySQL niet is geconfigureerd
-        SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
-        print("   Gebruikt SQLite als fallback (app.db)")
-    else:
-        SQLALCHEMY_DATABASE_URI = (
-            f"mysql+pymysql://{DB_USER}:{quote_plus(DB_PASSWORD)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-        )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+if not all([DB_USER, DB_NAME]):
+    raise RuntimeError(
+        "Database environment variables ontbreken. "
+        "Zet DB_USER, DB_PASSWORD, DB_HOST, DB_PORT en DB_NAME in Render."
+    )
+
+SQLALCHEMY_DATABASE_URI = (
+    f"mysql+pymysql://{DB_USER}:{quote_plus(DB_PASSWORD)}@"
+    f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
+)
+
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 
     # forceer engine options zodat pool oude verbindingen test/vervangt
     SQLALCHEMY_ENGINE_OPTIONS = {
