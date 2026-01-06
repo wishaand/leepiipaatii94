@@ -1,8 +1,6 @@
 import os
 from urllib.parse import quote_plus
-from dotenv import load_dotenv
 
-# Laad .env bestand VOORDAT Config class wordt aangemaakt
 load_dotenv()
 
 class Config:
@@ -24,17 +22,17 @@ class Config:
     DB_PORT = os.getenv("DB_PORT", "3306")
     DB_NAME = os.getenv("DB_NAME")
 
+    # Valideer database configuratie
     if not all([DB_USER, DB_NAME]):
-        raise RuntimeError(
-            "Database environment variables ontbreken. "
-            "Zet DB_USER, DB_PASSWORD, DB_HOST, DB_PORT en DB_NAME in .env"
+        print("⚠️  WAARSCHUWING: Database configuratie ontbreekt!")
+        print("   Maak een .env bestand aan met: DB_USER, DB_PASSWORD, DB_HOST, DB_NAME")
+        # Fallback naar SQLite voor development als MySQL niet is geconfigureerd
+        SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
+        print("   Gebruikt SQLite als fallback (app.db)")
+    else:
+        SQLALCHEMY_DATABASE_URI = (
+            f"mysql+pymysql://{DB_USER}:{quote_plus(DB_PASSWORD)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
         )
-
-    SQLALCHEMY_DATABASE_URI = (
-        f"mysql+pymysql://{DB_USER}:{quote_plus(DB_PASSWORD)}@"
-        f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    )
-
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # forceer engine options zodat pool oude verbindingen test/vervangt
