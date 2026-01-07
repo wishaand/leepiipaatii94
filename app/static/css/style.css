@@ -54,6 +54,7 @@ body {
   font-weight: 700;
   background: linear-gradient(90deg, #00b4d8, #007aff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 0.5px;
   text-decoration: none;
@@ -254,6 +255,7 @@ body {
   font-weight: 700;
   background: linear-gradient(90deg, #00b4d8, #007aff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 0.5px;
 }
@@ -720,6 +722,7 @@ login pagina
   font-size: 1.8rem;
   background: linear-gradient(90deg, #00b4d8, #007aff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
   letter-spacing: 1px;
@@ -1499,6 +1502,7 @@ login pagina
   margin-bottom: 20px;
   background: linear-gradient(90deg, #00b4d8, #007aff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

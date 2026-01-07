@@ -1,5 +1,9 @@
 import os
 from urllib.parse import quote_plus
+from dotenv import load_dotenv
+
+# Laad .env bestand VOORDAT Config class wordt aangemaakt
+load_dotenv()
 
 class Config:
     # HBO-ICT API

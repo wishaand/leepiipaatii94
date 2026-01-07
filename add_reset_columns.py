@@ -5,20 +5,44 @@ app = create_app()
 
 with app.app_context():
     try:
-        # Voeg reset_token kolom toe
-        db.session.execute(text("""
-            ALTER TABLE gebruiker 
-            ADD COLUMN IF NOT EXISTS reset_token VARCHAR(100) UNIQUE
+        # Check eerst of kolommen al bestaan
+        result = db.session.execute(text("""
+            SELECT COUNT(*) 
+            FROM information_schema.COLUMNS 
+            WHERE TABLE_SCHEMA = DATABASE()
+            AND TABLE_NAME = 'gebruiker' 
+            AND COLUMN_NAME = 'reset_token'
         """))
         
-        # Voeg reset_token_expiry kolom toe
-        db.session.execute(text("""
-            ALTER TABLE gebruiker 
-            ADD COLUMN IF NOT EXISTS reset_token_expiry DATETIME
+        if result.scalar() == 0:
+            db.session.execute(text("""
+                ALTER TABLE gebruiker 
+                ADD COLUMN reset_token VARCHAR(100) UNIQUE
+            """))
+            print("✅ reset_token kolom toegevoegd")
+        else:
+            print("ℹ️  reset_token kolom bestaat al")
+        
+        # Check reset_token_expiry
+        result = db.session.execute(text("""
+            SELECT COUNT(*) 
+            FROM information_schema.COLUMNS 
+            WHERE TABLE_SCHEMA = DATABASE()
+            AND TABLE_NAME = 'gebruiker' 
+            AND COLUMN_NAME = 'reset_token_expiry'
         """))
+        
+        if result.scalar() == 0:
+            db.session.execute(text("""
+                ALTER TABLE gebruiker 
+                ADD COLUMN reset_token_expiry DATETIME
+            """))
+            print("✅ reset_token_expiry kolom toegevoegd")
+        else:
+            print("ℹ️  reset_token_expiry kolom bestaat al")
         
         db.session.commit()
-        print("✅ Reset token kolommen succesvol toegevoegd!")
+        print("✅ Database update succesvol!")
         
     except Exception as e:
         db.session.rollback()
