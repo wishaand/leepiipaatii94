@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+  <h1>Nieuw Wachtwoord Instellen</h1>
+  <p style="text-align: center; color: #b0b0b0; margin-bottom: 30px;">
+    Kies een nieuw wachtwoord voor je account.
+  </p>
+
+  <form class="auth-form" method="post" action="{{ url_for('main.reset_wachtwoord', token=token) }}">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+      {{ form.password.label }}
+      {{ form.password(class="form-control", placeholder="Minimaal 6 tekens") }}
+      {% if form.password.errors %}
+        <div class="form-errors">{{ form.password.errors[0] }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      {{ form.password2.label }}
+      {{ form.password2(class="form-control", placeholder="Herhaal nieuw wachtwoord") }}
+      {% if form.password2.errors %}
+        <div class="form-errors">{{ form.password2.errors[0] }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">Reset wachtwoord</button>
+    </div>
+  </form>
+
+  <div class="auth-links">
+    <p><a href="{{ url_for('main.login') }}">← Terug naar inloggen</a></p>
+  </div>
+</div>
+{% endblock %}

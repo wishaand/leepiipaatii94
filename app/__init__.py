@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import generate_csrf
+from flask_migrate import Migrate  # Nieuw
 from sqlalchemy import text
 from config import Config
 
@@ -13,6 +14,7 @@ db = SQLAlchemy()
 login = LoginManager()
 login.login_view = 'main.login'
 csrf = CSRFProtect()
+migrate = Migrate()  # Nieuw
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -24,6 +26,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     login.init_app(app)
     csrf.init_app(app)
+    migrate.init_app(app, db)  # Nieuw
 
     # Make csrf_token() available in Jinja templates
     app.jinja_env.globals['csrf_token'] = generate_csrf

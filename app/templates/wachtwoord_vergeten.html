@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+  <h1>Wachtwoord Vergeten</h1>
+  <p style="text-align: center; color: #b0b0b0; margin-bottom: 30px;">
+    Voer je emailadres in en we sturen je een link om je wachtwoord te resetten.
+  </p>
+
+  <form class="auth-form" method="post" action="{{ url_for('main.wachtwoord_vergeten') }}">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+      {{ form.email.label }}
+      {{ form.email(class="form-control", placeholder="je@email.com") }}
+      {% if form.email.errors %}
+        <div class="form-errors">{{ form.email.errors[0] }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">Verstuur reset link</button>
+    </div>
+  </form>
+
+  <div class="auth-links">
+    <p><a href="{{ url_for('main.login') }}">← Terug naar inloggen</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1>Wachtwoord Wijzigen</h1>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <h2 style="text-align: center; margin-bottom: 30px;">🔐 Wijzig je wachtwoord</h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="flash-message" style="margin-bottom: 20px; padding: 12px; background: rgba(0, 180, 216, 0.1); border: 1px solid rgba(0, 180, 216, 0.3); border-radius: 8px; color: #00b4d8;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form class="auth-form" method="post" action="{{ url_for('main.wijzig_wachtwoord') }}">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+      {{ form.current_password.label }}
+      {{ form.current_password(class="form-control", placeholder="Voer je huidige wachtwoord in") }}
+      {% if form.current_password.errors %}
+        <div class="form-errors">{{ form.current_password.errors[0] }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      {{ form.new_password.label }}
+      {{ form.new_password(class="form-control", placeholder="Minimaal 6 tekens") }}
+      {% if form.new_password.errors %}
+        <div class="form-errors">{{ form.new_password.errors[0] }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      {{ form.new_password2.label }}
+      {{ form.new_password2(class="form-control", placeholder="Herhaal nieuw wachtwoord") }}
+      {% if form.new_password2.errors %}
+        <div class="form-errors">{{ form.new_password2.errors[0] }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">Wachtwoord wijzigen</button>
+    </div>
+  </form>
+
+  <div class="auth-links" style="margin-top: 20px;">
+    <p><a href="{{ url_for('main.index') }}">← Terug naar home</a></p>
+  </div>
+</div>
+{% endblock %}

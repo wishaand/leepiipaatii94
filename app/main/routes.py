@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from . import bp
 from app import db
 from app.models import User, Betaling, Abonnement
-from app.forms import LoginForm, RegisterForm, ContactForm
+from app.forms import LoginForm, RegisterForm, ContactForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm
 from sqlalchemy.exc import OperationalError
 
 @bp.route('/')
@@ -128,3 +128,102 @@ def contact():
 def betalingen_overzicht():
     betalingen = Betaling.query.order_by(Betaling.id.desc()).all()
     return render_template("betalingen_overzicht.html", betalingen=betalingen)
+
+
+@bp.route("/wijzig-wachtwoord", methods=['GET', 'POST'])
+@login_required
+def wijzig_wachtwoord():
+    """Wachtwoord wijzigen pagina"""
+    form = ChangePasswordForm()
+    
+    if form.validate_on_submit():
+        # Controleer of huidig wachtwoord klopt
+        if not current_user.check_password(form.current_password.data):
+            flash('Huidig wachtwoord is onjuist', 'error')
+            return redirect(url_for('main.wijzig_wachtwoord'))
+        
+        # Stel nieuw wachtwoord in
+        current_user.set_password(form.new_password.data)
+        
+        try:
+            db.session.commit()
+            flash('Je wachtwoord is succesvol gewijzigd!', 'success')
+            return redirect(url_for('main.index'))
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Fout bij wachtwoord wijzigen: {e}")
+            flash('Er is een fout opgetreden. Probeer het opnieuw.', 'error')
+            return redirect(url_for('main.wijzig_wachtwoord'))
+    
+    return render_template('wijzig_wachtwoord.html', form=form)
+
+@bp.route("/wachtwoord-vergeten", methods=['GET', 'POST'])
+def wachtwoord_vergeten():
+    """Vraag wachtwoord reset aan"""
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    
+    form = PasswordResetRequestForm()
+    
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data.lower()).first()
+        
+        if user:
+            # Genereer reset token
+            token = user.generate_reset_token()
+            
+            try:
+                db.session.commit()
+                
+                # TODO: Stuur email met reset link (nu alleen flash message)
+                reset_url = url_for('main.reset_wachtwoord', token=token, _external=True)
+                
+                # In productie: verstuur email met reset_url
+                # Voor nu: toon link in flash message (alleen voor development!)
+                flash(f'Reset link (DEVELOPMENT ONLY): {reset_url}', 'info')
+                flash('Als dit emailadres bestaat, is er een reset link verstuurd.', 'success')
+                
+                return redirect(url_for('main.login'))
+                
+            except Exception as e:
+                db.session.rollback()
+                current_app.logger.error(f"Fout bij reset token: {e}")
+                flash('Er is een fout opgetreden. Probeer het opnieuw.', 'error')
+        else:
+            # Security: toon altijd succesbericht (ook als email niet bestaat)
+            flash('Als dit emailadres bestaat, is er een reset link verstuurd.', 'success')
+            return redirect(url_for('main.login'))
+    
+    return render_template('wachtwoord_vergeten.html', form=form)
+
+
+@bp.route("/reset-wachtwoord/<token>", methods=['GET', 'POST'])
+def reset_wachtwoord(token):
+    """Reset wachtwoord met token"""
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    
+    # Zoek gebruiker met deze token
+    user = User.query.filter_by(reset_token=token).first()
+    
+    if not user or not user.verify_reset_token(token):
+        flash('Ongeldige of verlopen reset link.', 'error')
+        return redirect(url_for('main.login'))
+    
+    form = PasswordResetForm()
+    
+    if form.validate_on_submit():
+        # Stel nieuw wachtwoord in
+        user.set_password(form.password.data)
+        user.clear_reset_token()
+        
+        try:
+            db.session.commit()
+            flash('Je wachtwoord is succesvol gereset! Je kunt nu inloggen.', 'success')
+            return redirect(url_for('main.login'))
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Fout bij wachtwoord reset: {e}")
+            flash('Er is een fout opgetreden. Probeer het opnieuw.', 'error')
+    
+    return render_template('reset_wachtwoord.html', form=form, token=token)
