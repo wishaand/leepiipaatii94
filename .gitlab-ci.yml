@@ -21,8 +21,8 @@ pages:
     paths:
       - public
   rules:
-    variables:
-  DEPLOY_MKDOCS: "true"
+    rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 
 deploy_to_render:
