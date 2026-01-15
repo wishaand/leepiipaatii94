@@ -33,3 +33,4 @@ deploy_to_render:
     - curl -X POST "$Render_Hook"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#test
