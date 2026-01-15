@@ -5,14 +5,13 @@ stages:
 pages:
   image: python:3.9-slim
   stage: build
-  when: always
   before_script:
-    - time apt update && apt-get install -y git
-    - time pip install -r docs/requirements.txt
-    - time git clone https://uva-hva.gitlab.host/hbo-ict/mdocotion.git mdocotion
-    - time cd mdocotion && python setup.py install && cd ..
+    - apt update && apt-get install -y git
+    - pip install -r docs/requirements.txt
+    - git clone https://uva-hva.gitlab.host/hbo-ict/mdocotion.git mdocotion
+    - cd mdocotion && python setup.py install && cd ..
   script:
-    - time mkdocs build --site-dir public --config-file mkdocs.yml
+    - mkdocs build --site-dir public --config-file mkdocs.yml
   artifacts:
     paths:
       - public
@@ -20,13 +19,12 @@ pages:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       variables:
         DEPLOY_MKDOCS: "true"
-    - when: never  
 
 deploy_to_render:
   stage: deploy
   image: curlimages/curl:latest
   script:
     - echo "Triggering deploy on Render"
-    - curl -X POST "$Render_Hook"
+    - curl -s -X POST "$Render_Hook" -o /dev/null
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
