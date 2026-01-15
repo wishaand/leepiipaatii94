@@ -10,8 +10,6 @@ pages:
   image: python:3.9-slim
   stage: build
   when: always
-  tags:
-    - hva
   before_script:
     - time apt update && apt-get install -y git
     - time pip install -r docs/requirements.txt
@@ -23,7 +21,9 @@ pages:
     paths:
       - public
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DEPLOY_MKDOCS == "true"
+    variables:
+  DEPLOY_MKDOCS: "true"
+
 
 deploy_to_render:
   stage: deploy
