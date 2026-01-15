@@ -1,10 +1,6 @@
-
 stages:
   - build
   - deploy
-
-variables:
-  DEPLOY_MKDOCS: "false"
 
 pages:
   image: python:3.9-slim
@@ -22,7 +18,9 @@ pages:
       - public
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-
+      variables:
+        DEPLOY_MKDOCS: "true"
+    - when: never  
 
 deploy_to_render:
   stage: deploy
@@ -31,5 +29,4 @@ deploy_to_render:
     - echo "Triggering deploy on Render"
     - curl -X POST "$Render_Hook"
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#test 1
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
