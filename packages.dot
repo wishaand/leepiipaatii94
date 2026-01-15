@@ -1,0 +1,50 @@
+digraph "packages" {
+rankdir=BT
+charset="utf-8"
+"app" [color="black", label=<app>, shape="box", style="solid"];
+"app.db" [color="black", label=<app.db>, shape="box", style="solid"];
+"app.forms" [color="black", label=<app.forms>, shape="box", style="solid"];
+"app.main" [color="black", label=<app.main>, shape="box", style="solid"];
+"app.main.routes" [color="black", label=<app.main.routes>, shape="box", style="solid"];
+"app.models" [color="black", label=<app.models>, shape="box", style="solid"];
+"app.services" [color="black", label=<app.services>, shape="box", style="solid"];
+"app.services.file_validator" [color="black", label=<app.services.file_validator>, shape="box", style="solid"];
+"app.services.nextcloud_client" [color="black", label=<app.services.nextcloud_client>, shape="box", style="solid"];
+"app.services.service_factory" [color="black", label=<app.services.service_factory>, shape="box", style="solid"];
+"app.services.temp_storage" [color="black", label=<app.services.temp_storage>, shape="box", style="solid"];
+"app.services.upload_log_service" [color="black", label=<app.services.upload_log_service>, shape="box", style="solid"];
+"app.services.upload_service" [color="black", label=<app.services.upload_service>, shape="box", style="solid"];
+"app.settings" [color="black", label=<app.settings>, shape="box", style="solid"];
+"app.upload" [color="black", label=<app.upload>, shape="box", style="solid"];
+"app.upload.routes" [color="black", label=<app.upload.routes>, shape="box", style="solid"];
+"app" -> "app.main" [arrowhead="open", arrowtail="none"];
+"app" -> "app.models" [arrowhead="open", arrowtail="none"];
+"app" -> "app.upload" [arrowhead="open", arrowtail="none"];
+"app.main" -> "app.main" [arrowhead="open", arrowtail="none"];
+"app.main" -> "app.main.routes" [arrowhead="open", arrowtail="none"];
+"app.main.routes" -> "app" [arrowhead="open", arrowtail="none"];
+"app.main.routes" -> "app.db" [arrowhead="open", arrowtail="none"];
+"app.main.routes" -> "app.forms" [arrowhead="open", arrowtail="none"];
+"app.main.routes" -> "app.models" [arrowhead="open", arrowtail="none"];
+"app.main.routes" -> "app.services.service_factory" [arrowhead="open", arrowtail="none"];
+"app.models" -> "app" [arrowhead="open", arrowtail="none"];
+"app.models" -> "app.db" [arrowhead="open", arrowtail="none"];
+"app.services" -> "app.services.file_validator" [arrowhead="open", arrowtail="none"];
+"app.services" -> "app.services.nextcloud_client" [arrowhead="open", arrowtail="none"];
+"app.services" -> "app.services.service_factory" [arrowhead="open", arrowtail="none"];
+"app.services" -> "app.services.temp_storage" [arrowhead="open", arrowtail="none"];
+"app.services" -> "app.services.upload_log_service" [arrowhead="open", arrowtail="none"];
+"app.services" -> "app.services.upload_service" [arrowhead="open", arrowtail="none"];
+"app.services.service_factory" -> "app.services.file_validator" [arrowhead="open", arrowtail="none"];
+"app.services.service_factory" -> "app.services.nextcloud_client" [arrowhead="open", arrowtail="none"];
+"app.services.service_factory" -> "app.services.temp_storage" [arrowhead="open", arrowtail="none"];
+"app.services.service_factory" -> "app.services.upload_service" [arrowhead="open", arrowtail="none"];
+"app.services.upload_log_service" -> "app" [arrowhead="open", arrowtail="none"];
+"app.services.upload_log_service" -> "app.db" [arrowhead="open", arrowtail="none"];
+"app.services.upload_log_service" -> "app.models" [arrowhead="open", arrowtail="none"];
+"app.services.upload_service" -> "app.services.upload_log_service" [arrowhead="open", arrowtail="none"];
+"app.upload" -> "app.upload" [arrowhead="open", arrowtail="none"];
+"app.upload" -> "app.upload.routes" [arrowhead="open", arrowtail="none"];
+"app.upload.routes" -> "app.services" [arrowhead="open", arrowtail="none"];
+"app.upload.routes" -> "app.upload" [arrowhead="open", arrowtail="none"];
+}

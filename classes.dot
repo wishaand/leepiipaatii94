@@ -1,0 +1,9 @@
+digraph "classes" {
+rankdir=BT
+charset="utf-8"
+"app.models.Abonnement" [color="black", fontcolor="black", label=<{Abonnement|abonnement_id<br ALIGN="LEFT"/>actief<br ALIGN="LEFT"/>betalingen<br ALIGN="LEFT"/>looptijd_maanden<br ALIGN="LEFT"/>naam<br ALIGN="LEFT"/>prijs<br ALIGN="LEFT"/>|}>, shape="record", style="solid"];
+"app.models.Betaling" [color="black", fontcolor="black", label=<{Betaling|abonnement<br ALIGN="LEFT"/>abonnement_id<br ALIGN="LEFT"/>bedrag<br ALIGN="LEFT"/>betaald_op<br ALIGN="LEFT"/>id<br ALIGN="LEFT"/>status<br ALIGN="LEFT"/>|}>, shape="record", style="solid"];
+"app.models.Contact" [color="black", fontcolor="black", label=<{Contact|bericht<br ALIGN="LEFT"/>created_at<br ALIGN="LEFT"/>email<br ALIGN="LEFT"/>id<br ALIGN="LEFT"/>naam<br ALIGN="LEFT"/>onderwerp<br ALIGN="LEFT"/>telefoon<br ALIGN="LEFT"/>|}>, shape="record", style="solid"];
+"app.models.UploadLog" [color="black", fontcolor="black", label=<{UploadLog|file_size<br ALIGN="LEFT"/>filename<br ALIGN="LEFT"/>gebruiker_id<br ALIGN="LEFT"/>id<br ALIGN="LEFT"/>status<br ALIGN="LEFT"/>upload_datetime<br ALIGN="LEFT"/>|}>, shape="record", style="solid"];
+"app.models.User" [color="black", fontcolor="black", label=<{User|achternaam<br ALIGN="LEFT"/>email<br ALIGN="LEFT"/>gebruiker_id<br ALIGN="LEFT"/>reset_token<br ALIGN="LEFT"/>reset_token_expiry<br ALIGN="LEFT"/>telefoon<br ALIGN="LEFT"/>voornaam<br ALIGN="LEFT"/>wachtwoord<br ALIGN="LEFT"/>|check_password(password)<br ALIGN="LEFT"/>clear_reset_token()<br ALIGN="LEFT"/>generate_reset_token()<br ALIGN="LEFT"/>get_id()<br ALIGN="LEFT"/>set_password(password)<br ALIGN="LEFT"/>verify_reset_token(token)<br ALIGN="LEFT"/>}>, shape="record", style="solid"];
+}

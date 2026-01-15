@@ -26,3 +26,16 @@ pages:
     - public
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DEPLOY_MKDOCS == "true"
+
+  stages:
+  - build
+  - deploy
+
+deploy_to_render:
+  stage: deploy
+  image: curlimages/curl:latest
+  script:
+    - echo "Triggering deploy on Render"
+    - curl -X POST "$Render_Hook"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
