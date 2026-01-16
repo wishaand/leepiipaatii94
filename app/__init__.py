@@ -56,5 +56,7 @@ def create_app(config_class=Config):
     login.user_loader(load_user)
 
     return app
+app = create_app()
+
 
 

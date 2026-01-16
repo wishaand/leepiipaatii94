@@ -1,7 +1,8 @@
-import os
 from urllib.parse import quote_plus
+from dotenv import load_dotenv
+import os
 
-load_dotenv()
+load_dotenv()  
 
 class Config:
     # HBO-ICT API
