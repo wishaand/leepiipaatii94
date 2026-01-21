@@ -1,12 +1,15 @@
 stages:
   - build
   - deploy
-
+ 
+variables:
+  DEPLOY_MKDOCS: "true"
+ 
 pages:
-  stage: build
   image: python:3.9-slim
+  stage: build
   tags:
-    - hva
+    - hva        
   before_script:
     - apt update && apt-get install -y git
     - pip install -r docs/requirements.txt
@@ -19,14 +22,14 @@ pages:
       - public
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-
+ 
 deploy_to_render:
   stage: deploy
   image: curlimages/curl:latest
   tags:
-    - hva
+    - hva        
   script:
     - echo "Triggering deploy on Render"
-    - curl -s -X POST "$RENDER_DEPLOY_HOOK" -o /dev/null
+    - curl -s -X POST "$Render_Hook" -o /dev/null
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
