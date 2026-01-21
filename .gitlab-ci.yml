@@ -30,6 +30,6 @@ deploy_to_render:
     - hva        
   script:
     - echo "Triggering deploy on Render"
-    - curl -s -X POST "$Render_Hook" -o /dev/null
+    - curl -s -X POST "$RENDER_HOOK" -o /dev/null
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
