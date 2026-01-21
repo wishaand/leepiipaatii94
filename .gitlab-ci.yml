@@ -1,7 +1,7 @@
 stages:
   - build
   - deploy
-
+tags: hva
 pages:
   image: python:3.9-slim
   stage: build
@@ -28,4 +28,3 @@ deploy_to_render:
     - curl -s -X POST "$Render_Hook" -o /dev/null
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-#test 1
